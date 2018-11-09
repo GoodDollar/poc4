@@ -12,14 +12,14 @@ import WebsocketProvider from 'web3-providers-ws'
 import {promisifyTxHash} from '/imports/web3utils.js'
 import IdentityContract from '/ABI/Identity.json'
 import GenesisContract from '/ABI/GenesisProtocol.json'
-import GENContract from '/ABI/GENProtocol.json'
+import GENContract from '/ABI/GEN.json'
 
 import ethUtils from 'ethereumjs-util'
 import IPFS from 'ipfs-mini'
 import bs58 from 'bs58'
 
 
-
+const CONTRACTS_DISABLED = false
 export default class IDDao {
 
   web3:Web3;
@@ -31,9 +31,9 @@ export default class IDDao {
 
 
   constructor(addr:string,pkey:string) {
-    
+
     // $FlowFixMe
-    
+
     this.addr = addr
     this.pkey = pkey
     this.publicKey = ethUtils.privateToPublic(ethUtils.toBuffer(pkey))
@@ -41,17 +41,34 @@ export default class IDDao {
     this.web3 = new Web3(new WebsocketProvider(Meteor.settings.public.infurawss))
     this.web3.eth.accounts.wallet.add(pkey)
     this.web3.eth.defaultAccount = addr
-    this.identityContract = new this.web3.eth.Contract(IdentityContract.abi,IdentityContract.networks[this.netword_id],{from:addr})
-    this.genesisContract = new this.web3.eth.Contract(GenesisContract.abi,GenesisContract.networks[this.netword_id],{from:addr})
-    this.GENContract = new this.web3.eth.Contract(GENContract.abi,GENContract.networks[this.netword_id],{from:addr})
-    
+    this.identityContract = new this.web3.eth.Contract(IdentityContract.abi,"0x1bf6c607386b8471daad720283d0686b406530ae",{from:addr})
+    this.genesisContract = new this.web3.eth.Contract(GenesisContract.abi,"0x0866dF55c550cedc4e504AdbaC9A45c06C670b78",{from:addr})
+    this.GENContract = new this.web3.eth.Contract(GENContract.abi,GENContract.address,{from:addr})
+
     this.netword_id = Meteor.settings.public.network_id // ropsten network
     this.gasPrice = this.web3.eth.getGasPrice()
-    this.identityStatus = this.getIdentityStatus(addr)
-    this.proposals = {}
-    listenProposals()
+    if(Meteor.isClient)
+    {
+      this.identityStatus = this.getIdentityStatus(addr)
+      this.proposals = {}
+      //start listening to proposal events
+      this.listenProposals2()
+    }
   }
 
+
+/*
+load new user wallet with some eth and gen
+ */
+async loadWallet(addr) {
+  // let gas = await this.web3.eth.estimateGas({to:addr, from:this.addr, value:this.web3.utils.toWei("0.1", "ether")})
+  let gas = 300000
+  let gasPrice = (await this.gasPrice)
+  let txHash = await this.web3.eth.sendTransaction({gasPrice,gas,to:addr, from:this.addr, value:this.web3.utils.toWei("0.1", "ether")})
+  // gas = await this.GENContract.methods.transfer(addr,this.web3.utils.toWei("100", "ether")).estimateGas()
+  let genTxHash = await this.GENContract.methods.transfer(addr, this.web3.utils.toWei("100", "ether")).send({gasPrice,gas})
+  console.log("loaded wallet",addr)
+}
 // Return bytes32 hex string from base58 encoded ipfs hash,
 // stripping leading 2 bytes from 34 byte IPFS hash
 // Assume IPFS defaults: function:0x12=sha2, size:0x20=256 bits
@@ -90,19 +107,22 @@ getIpfsHashFromBytes32(bytes32Hex) {
 
 
     )
-    let ipfsByte32 = await ipfsPromise.then(hash => this.getBytes32FromIpfsHash(hash)) 
+    let ipfsByte32 = await ipfsPromise.then(hash => this.getBytes32FromIpfsHash(hash))
     console.log({ipfsByte32})
-    let amount = this.web3.utils.toWei(feeAmount.toString(), "ether");
-    let gas = (await this.identityContract.methods.proposeProfile(ipfsByte32).estimateGas({value:amount}))
-      let gasPrice = (await this.gasPrice)*1.5
-      console.log({gas,gasPrice,amount})
-    let txPromise:Web3PromieEvent = this.identityContract.methods.proposeProfile(ipfsByte32).send({
-        gasPrice,
-        gas,
-        value: amount
+
+    let amount= this.web3.utils.toWei(feeAmount.toString(), "ether");
+    let gas = 400000//await this.identityContract.methods.proposeProfile(ipfsByte32).estimateGas({from:this.addr})
+    let gasPrice = (await this.gasPrice)*1.5
+    console.log({gas,gasPrice,amount})
+    let txHash = await this.identityContract.methods.proposeProfile(ipfsByte32).send({
+      gasPrice,
+      gas,
+      value: amount
     })
-    return Promise.resolve("123")
-    
+    console.log("Registered profile to DAO",txHash)
+    return txHash
+
+
   }
 
   async vouch(proposalId,genAmount) {
@@ -114,8 +134,8 @@ getIpfsHashFromBytes32(bytes32Hex) {
         gas
     })
     await txApprovePromise
-    let gas = await this.genesisContract.methods.stake(proposalId,1,genAmount).estimateGas()
-    let gasPrice = (await this.gasPrice)*1.5
+    gas = await this.genesisContract.methods.stake(proposalId,1,genAmount).estimateGas()
+    gasPrice = (await this.gasPrice)*1.5
     console.log({gas,gasPrice,amount})
     let txPromise:Web3PromieEvent = this.genesisContract.methods.stake(proposalId,1,genAmount).send({
         gasPrice,
@@ -125,79 +145,104 @@ getIpfsHashFromBytes32(bytes32Hex) {
   }
 
   async getProposalProfileIPFS(ipfsByte32) {
-    
-    let ipfsHash = getIpfsHashFromBytes32(ipfsByte32)
+
+    let ipfsHash = this.getIpfsHashFromBytes32(ipfsByte32)
     console.log("getting ipfs file for:",ipfsByte32,ipfsHash)
     return new Promise((reject,resolve) => {
       this.ipfs.catJSON(ipfsHash, (err, result) => {
         console.log("got ipfs response for:",ipfsByte32,ipfsHash,err,result)
-        if(err) reject(err)
-        else resolve(result)
+        if(err) {
+          console.log("error ipfs",err)
+          reject(err)
+        }
+        else {
+
+          resolve(result)
+        }
       });
-    })
+    }).catch(e =>  e)
+  }
+  listenProposals2() {
+    this.identityContract.getPastEvents('ProfileProposal', {
+      fromBlock: 9322796,
+      toBlock: 'latest'
+    }, function(error, events){ console.log(error,events); })
+    .then(events => {
+        console.log("profileproposals",events) // same results as the optional callback above
+        events.forEach(e => this.handleProposalEvent(e))
+    });
+  }
+  async handleProposalEvent(event) {
+    let {_address} = event.returnValues
+    let profile = await this.identityContract.methods.profiles(_address).call()
+    console.log("Adding Profile if has status 1",{profile},this)
+    if(profile.state=="1")
+    {
+      let proposalStatus = await this.genesisContract.methods.state(profile.proposalId).call().then(s => parseInt(s))
+
+      if(proposalStatus<=2)
+      {
+        console.log("Closed proposal fitltered",{profile,proposalStatus})
+        return
+      }
+      let proposalInfo = await this.genesisContract.methods.proposals(profile.proposalId).call()
+      let profileData = await this.getProposalProfileIPFS(profile.identityHash)
+      profile.proposalInfo = proposalInfo
+      profile.proposalStatus = proposalStatus
+      profile.data = profileData
+      console.log("Inserted Profile+Proposal",{profile,proposalStatus})
+      this.proposals[_address] = profile
+    }
   }
   async listenProposals() {
-    let startBlock = 9322796  
-    this.identityContract.events.ProfileProposal({
-      fromBlock: startBlock
-    }, (error, event) => { console.log(event); })
+    if(CONTRACTS_DISABLED)
+      return
+    let startBlock = 9322796
+    let subscribed = this.identityContract.events.ProfileProposal({
+      fromBlock: 9323973,
+      toBlock: 'latest'
+    }, (error, event) => { console.log("ProfileProposal event:",event); })
     .on('data', async (event) => {
-      console.log(event); // same results as the optional callback above
-      let {_address} = event.returnValues
-      let profile = this.identityContract.methods.profiles(_address).call()
-      console.log("Adding Profile if has status 1",{profile})
-      if(profile.status==1)
-      {
-        let proposalStatus = await this.genesisContract.methods.status(profile.proposalId).call()
-        if(proposalStatus<=2)
-        {
-          console.log("Closed proposal fitltered",profile)
-          return
-        }
-        let proposalInfo = await this.genesisContract.methods.proposals(profile.proposalId).call()
-        let profileData = await this.getProposalProfileIPFS(profile.identityHash)
-        profile.proposalInfo = proposalInfo
-        profile.proposalStatus = proposalStatus
-        profile.data = profileData
-        console.log("Inserted Profile+Proposal",profile)
-        this.profiles[proposal._address] = profile
-      }
+      console.log("ProfileProposal event:",event); // same results as the optional callback above
+      this.handleProposalEvent(event)
     })
-
-    this.identityContract.events.ProfileApproved({
-      fromBlock: startBlock
-    }, (error, event) => { console.log(event); })
-    .on('data', async (event) => {
-      console.log(event); // same results as the optional callback above
-      let {_address} = event.returnValues
-      delete this.profiles[_address]
-      
-    })
-    this.identityContract.events.ProfileDeclined({
-      fromBlock: startBlock
-    }, (error, event) => { console.log(event); })
-    .on('data', async (event) => {
-      console.log(event); // same results as the optional callback above
-      let {_address} = event.returnValues
-      delete this.profiles[_address]
-      
-    })
+    console.log("registered to proposalevent",subscribed)
+    // this.identityContract.events.ProfileApproved({
+    //   fromBlock: startBlock
+    // }, (error, event) => { console.log(event); })
+    // .on('data', async (event) => {
+    //   console.log(event); // same results as the optional callback above
+    //   let {_address} = event.returnValues
+    //   delete this.profiles[_address]
+    //
+    // })
+    // this.identityContract.events.ProfileDeclined({
+    //   fromBlock: startBlock
+    // }, (error, event) => { console.log(event); })
+    // .on('data', async (event) => {
+    //   console.log(event); // same results as the optional callback above
+    //   let {_address} = event.returnValues
+    //   delete this.profiles[_address]
+    //
+    // })
 
 
   }
 
   async getIdentityStatus(addr) {
+    if(CONTRACTS_DISABLED)
+      return 'none'
     let profile = await this.identityContract.methods.profiles(addr).call()
     if(profile.state==3)
       return 'approved'
-    let proposalStatus = await this.genesisContract.methods.stats(profile.proposalId).call() 
+    let proposalStatus = await this.genesisContract.methods.state(profile.proposalId).call()
     if(proposalStatus==3)
       return 'pending vouch'
     if(proposalStatus==4)
       return 'pending vote'
     return 'none'
-  }  
+  }
 
 
-  
+
 }

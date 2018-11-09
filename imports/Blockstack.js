@@ -3,6 +3,12 @@ import blockstack from 'blockstack'
 import _ from 'lodash'
 import ethUtils from 'ethereumjs-util'
 import IDDao from '/imports/IDDao.js'
+import Web3 from 'web3'
+// $FlowFixMe
+import Web3PromieEvent from 'web3-core-promievent'
+import WebsocketProvider from 'web3-providers-ws'
+
+const CREATE_RANDOM_WALLET = true;
 const Events = {
   CREATE_ACCOUNT_FAILED:"Account Creation Failed"
 }
@@ -104,6 +110,7 @@ export class Blockstack {
     return address
   }
   init() {
+
     let loginPromise
     if(blockstack.isUserSignedIn()) loginPromise = Promise.resolve({})
     else if(blockstack.isSignInPending()) {
@@ -112,13 +119,23 @@ export class Blockstack {
     return loginPromise.then(async () => {
       console.log("login in")
       this.userData = blockstack.loadUserData()
+
+        let web3 = new Web3(new WebsocketProvider(Meteor.settings.public.infurawss))
+        let account = web3.eth.accounts.create();
+        console.log(account)
+
+
       let profile = await this.getProfile()
       if(_.get(profile,'address')==undefined)
       {
         profile.address = this.getUserEthAddr()
+        // profile.address = account.address
+        await Meteor.call('loadWallet',profile.address)
+
         let res = await blockstack.putFile("profile.js",JSON.stringify(profile),{encrypt:false})
       }
       this.iddao = new IDDao(this.getUserEthAddr(),'0x'+this.userData.appPrivateKey)
+      // this.iddao = new IDDao(account.address,account.privateKey)
       return this.userData
     })
 
@@ -127,23 +144,23 @@ export class Blockstack {
     return blockstack.isUserSignedIn()
   }
 
-  
+
   async writeIdentityDetails(data:Identity,fee:number) {
     try {
       let profile = await this.getProfile()
       profile.identity = data
       let dataHash = this.iddao.web3.utils.sha3(JSON.stringify(data))
-      
-      
+
+
       let profilePath = await blockstack.putFile("profile.js",JSON.stringify(profile),{encrypt:false})
       let ipfsData = {
         address:this.iddao.addr,
         hash: dataHash,
         path:profilePath
       }
-      
+
       console.log("Wrote profile to blockstack",{profilePath})
-      let res = await this.iddao.register(ipfsData,fee)  
+      let res = await this.iddao.register(ipfsData,fee)
       console.log('wrote identity',{res})
 
     } catch (e) {
@@ -165,11 +182,13 @@ export class Blockstack {
   }
 
   async getProposals() {
-    let proposals = await this.iddao.readProposals()
+    let proposals = _.toPairs(this.iddao.proposals)
     //read the profile from blockstack
-    let proposalPromises =  proposals.map(async proposal => {
-      let profile = await fetch(proposal.path).then(res => res.json())
+    let proposalPromises =  proposals.map(async ([address,proposal]) => {
+      console.log("getting blockstack profile",{address,proposal})
+      let profile = await fetch(proposal.data.path).then(res => res.json())
       proposal.profile = profile
+      return proposal
     })
     return Promise.all(proposalPromises)
   }

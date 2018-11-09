@@ -1,8 +1,7 @@
 {
     "public":{
-      "network_id":6000, 
+      "network_id":6000,
       "infura":"https://kovan.infura.io/v3/",
       "infurawss":"wss://kovan.infura.io/ws"
     }
 }
-  

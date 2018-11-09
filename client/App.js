@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import Main from './containers/Main';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { createMuiTheme } from '@material-ui/core/styles';
@@ -7,6 +8,8 @@ import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import { Provider, connect } from 'react-redux';
 import { createStore, compose } from 'redux';
 import configureStore from './store/configureStore'
+import './App.css';
+
 const store = configureStore()
 
 const theme = createMuiTheme({
@@ -24,7 +27,6 @@ class App extends Component {
 
           <div className="App">
             <Router>
-
               <Main />
             </Router>
           </div>
