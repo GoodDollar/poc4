@@ -26,7 +26,7 @@ class CandidateItem extends Component {
     isOpen:PropTypes.bool,
     vouched:PropTypes.object,
     suspcious:PropTypes.object,
-    isVoter:PropTypes.boolean
+    
   }
 
  
@@ -40,7 +40,7 @@ class CandidateItem extends Component {
     return (
       <div className="candidate" key={key}>
 
-        <img src={photo} alt="" />
+        <img src={photo} alt="" className="candidatePhoto" />
         <div className="candidateMeta">
           <Typography variant="caption" gutterBottom>Offering: {ethOffering} ETH</Typography>
           <Typography variant="h5" gutterBottom>{firstname + " " + lastname}</Typography>

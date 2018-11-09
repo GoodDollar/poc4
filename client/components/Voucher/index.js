@@ -18,10 +18,10 @@ class Voucher extends React.Component {
     constructor(props) {
         super(props);
         this.Vouche = this.Vouche.bind(this);
-        this.Vote = this.Vote.bind(this);
+        this.Fake = this.Fake.bind(this);
         this.updateSelectedCandidate = this.updateSelectedCandidate.bind(this);
         this.returnFromPayment = this.returnFromPayment.bind(this)
-        
+
         this.state = {
             selectedCandidate:undefined,
             showPayment:undefined
@@ -33,11 +33,11 @@ class Voucher extends React.Component {
     }
 
     Vouche(){
-         this.setState({"showPayment":"Vouche"});   
+         this.setState({"showPayment":"Vouche"});
     }
 
-    Vote(){
-        this.setState({"showPayment":"Vote"});   
+    Fake(){
+        this.setState({"showPayment":"Fake"});
    }
 
     updateSelectedCandidate(candidate){
@@ -46,46 +46,48 @@ class Voucher extends React.Component {
 
     returnFromPayment(){
         this.updateSelectedCandidate(undefined)
-        this.setState({"showPayment":undefined});   
+        this.setState({"showPayment":undefined});
 
     }
-   
-  
+
+
 
     render() {
-        console.log("this.state.showPayment="+this.state.showPayment)  
+        console.log("this.state.showPayment="+this.state.showPayment)
         const candidatesList = this.props.candidates
-       
+
         const candidate = this.state.selectedCandidate || this.props.candidates[0];
         return (
 
-            ((this.state.showPayment=="Vouche")&&(<Payment type="Vouche" candidate={candidate} returnFromPayment={this.returnFromPayment}></Payment>))||    
-            ((this.state.showPayment=="Vote")&&(<Payment type="Vote" candidate={candidate} returnFromPayment={this.returnFromPayment}></Payment>)) ||   
+            ((this.state.showPayment=="Vouche")&&(<Payment type="Vouche" candidate={candidate} returnFromPayment={this.returnFromPayment}></Payment>))||
+            ((this.state.showPayment=="Fake")&&(<Payment type="Fake" candidate={candidate} returnFromPayment={this.returnFromPayment}></Payment>)) ||
 
 
 
            (this.state.showPayment==undefined) && (<div>
-                <div>Vouch if profile is real and earn ETH</div>
+                <p className="topHeader">Vouch if profile is real and earn GEN</p>
                 <CandidatesSelector isOpen={true} candidates={candidatesList} slideHandler={this.updateSelectedCandidate} isVoter={false} />
-                <Grid container spacing={0}>
 
-                    <Grid item xs={6} sm={3}>
+                <div className="innerFlex">
+                    <Grid container spacing={0} justify="center">
 
-                        <Button variant="extendedFab" aria-label="Delete" onClick={()=>this.Vouche()}>
-                            <Icon />
-                            Vouche
-                        </Button>
+                        <Grid item xs={6} sm={6}>
 
+                            <Button aria-label="Delete" onClick={()=>this.Fake()}>
+                                <img src="/buttonFake.png" />
+                            </Button>
+
+                        </Grid>
+
+                        <Grid item xs={6} sm={6}>
+
+                            <Button aria-label="Delete" onClick={()=>this.Vouche()} >
+                                <img src="/buttonVouch.png" />
+                            </Button>
+
+                        </Grid>
                     </Grid>
-                    <Grid item xs={6} sm={3}>
-
-                        <Button variant="extendedFab" aria-label="Delete" onClick={()=>this.Vote()} >
-                            <Icon />
-                            Fake
-                          </Button>
-
-                    </Grid>
-                </Grid>
+                </div>
             </div>)
         )
     }

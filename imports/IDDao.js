@@ -41,9 +41,9 @@ export default class IDDao {
     this.web3 = new Web3(new WebsocketProvider(Meteor.settings.public.infurawss))
     this.web3.eth.accounts.wallet.add(pkey)
     this.web3.eth.defaultAccount = addr
-    this.identityContract = new this.web3.eth.Contract(IdentityContract.abi,"0x1bf6c607386b8471daad720283d0686b406530ae",{from:addr})
-    this.genesisContract = new this.web3.eth.Contract(GenesisContract.abi,"0x0866dF55c550cedc4e504AdbaC9A45c06C670b78",{from:addr})
-    this.GENContract = new this.web3.eth.Contract(GENContract.abi,GENContract.address,{from:addr})
+    this.identityContract = new this.web3.eth.Contract(IdentityContract.abi,"0x1bf6c607386b8471daad720283d0686b406530ae",{from:addr,gas:2000000})
+    this.genesisContract = new this.web3.eth.Contract(GenesisContract.abi,"0x0866dF55c550cedc4e504AdbaC9A45c06C670b78",{from:addr,gas:2000000})
+    this.GENContract = new this.web3.eth.Contract(GENContract.abi,GENContract.address,{from:addr,gas:4500000})
 
     this.netword_id = Meteor.settings.public.network_id // ropsten network
     this.gasPrice = this.web3.eth.getGasPrice()
@@ -52,7 +52,7 @@ export default class IDDao {
       this.identityStatus = this.getIdentityStatus(addr)
       this.proposals = {}
       //start listening to proposal events
-      this.listenProposals2()
+      this.proposalsPromise = this.listenProposals2()
     }
   }
 
@@ -63,10 +63,10 @@ load new user wallet with some eth and gen
 async loadWallet(addr) {
   // let gas = await this.web3.eth.estimateGas({to:addr, from:this.addr, value:this.web3.utils.toWei("0.1", "ether")})
   let gas = 300000
-  let gasPrice = (await this.gasPrice)
-  let txHash = await this.web3.eth.sendTransaction({gasPrice,gas,to:addr, from:this.addr, value:this.web3.utils.toWei("0.1", "ether")})
+  // let gasPrice = (await this.gasPrice)
+  let txHash = await this.web3.eth.sendTransaction({gas,to:addr, from:this.addr, value:this.web3.utils.toWei("0.1", "ether")})
   // gas = await this.GENContract.methods.transfer(addr,this.web3.utils.toWei("100", "ether")).estimateGas()
-  let genTxHash = await this.GENContract.methods.transfer(addr, this.web3.utils.toWei("100", "ether")).send({gasPrice,gas})
+  let genTxHash = await this.GENContract.methods.transfer(addr, this.web3.utils.toWei("100", "ether")).send()
   console.log("loaded wallet",addr)
 }
 // Return bytes32 hex string from base58 encoded ipfs hash,
@@ -114,7 +114,7 @@ getIpfsHashFromBytes32(bytes32Hex) {
     let gas = 400000//await this.identityContract.methods.proposeProfile(ipfsByte32).estimateGas({from:this.addr})
     let gasPrice = (await this.gasPrice)*1.5
     console.log({gas,gasPrice,amount})
-    let txHash = await this.identityContract.methods.proposeProfile(ipfsByte32).send({
+    let txHash = this.identityContract.methods.proposeProfile(ipfsByte32).send({
       gasPrice,
       gas,
       value: amount
@@ -126,21 +126,16 @@ getIpfsHashFromBytes32(bytes32Hex) {
   }
 
   async vouch(proposalId,genAmount) {
-    let gas = await this.GENContract.methods.approve(GenesisContract.address,genAmount).estimateGas()
-    let gasPrice = (await this.gasPrice)*1.5
-    console.log({gas,gasPrice,amount})
-    let txApprovePromise:Web3PromieEvent = this.GENContract.methods.approve(GenesisContract.address,genAmount).send({
-        gasPrice,
-        gas
-    })
-    await txApprovePromise
-    gas = await this.genesisContract.methods.stake(proposalId,1,genAmount).estimateGas()
-    gasPrice = (await this.gasPrice)*1.5
-    console.log({gas,gasPrice,amount})
-    let txPromise:Web3PromieEvent = this.genesisContract.methods.stake(proposalId,1,genAmount).send({
-        gasPrice,
-        gas
-    })
+    console.log("gencontract vouch call",proposalId,genAmount)
+    // let gas = await this.GENContract.methods.approve(GenesisContract.address,genAmount).estimateGas()
+    // let gasPrice = await this.gasPrice
+    // console.log({gas,gasPrice,genAmount})
+    let txApprovePromise:Web3PromieEvent = await this.GENContract.methods.approve(GenesisContract.address,genAmount).send()
+    console.log("gencontract vouch after approved",txApprovePromise)
+    //gas = await this.genesisContract.methods.stake(proposalId,1,genAmount).estimateGas()
+    //gasPrice = (await this.gasPrice)*1.5
+    let txPromise:Web3PromieEvent = await this.genesisContract.methods.stake(proposalId,1,genAmount).send()
+    console.log("vouch, after stake",{txPromise})
     return txPromise
   }
 
@@ -163,13 +158,14 @@ getIpfsHashFromBytes32(bytes32Hex) {
     }).catch(e =>  e)
   }
   listenProposals2() {
-    this.identityContract.getPastEvents('ProfileProposal', {
+    return this.identityContract.getPastEvents('ProfileProposal', {
       fromBlock: 9322796,
       toBlock: 'latest'
     }, function(error, events){ console.log(error,events); })
     .then(events => {
         console.log("profileproposals",events) // same results as the optional callback above
         events.forEach(e => this.handleProposalEvent(e))
+        return this.proposals
     });
   }
   async handleProposalEvent(event) {

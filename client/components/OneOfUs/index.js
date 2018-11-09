@@ -40,7 +40,7 @@ class OneOfUs extends React.Component {
                     </Grid>
 
                     <Grid xs={12}>
-                        <img src="/assests/1_Visual.png"
+                        <img src="/assets/1_Visual.png"
                         style={{height:'40vh'}}
                         />
                     </Grid>

@@ -140,6 +140,9 @@ export class Blockstack {
     })
 
   }
+  logout() {
+    blockstack.signUserOut()
+  }
   isLoggedIn() {
     return blockstack.isUserSignedIn()
   }
@@ -182,15 +185,17 @@ export class Blockstack {
   }
 
   async getProposals() {
-    let proposals = _.toPairs(this.iddao.proposals)
-    //read the profile from blockstack
-    let proposalPromises =  proposals.map(async ([address,proposal]) => {
-      console.log("getting blockstack profile",{address,proposal})
-      let profile = await fetch(proposal.data.path).then(res => res.json())
-      proposal.profile = profile
-      return proposal
+    return this.iddao.proposalsPromise.then(proposals => {
+      let proposalsList = _.toPairs(proposals)
+      //read the profile from blockstack
+      let proposalPromises =  proposalsList.map(async ([address,proposal]) => {
+        console.log("getting blockstack profile",{address,proposal})
+        let profile = await fetch(proposal.data.path).then(res => res.json())
+        proposal.profile = profile
+        return proposal
+      })
+      return Promise.all(proposalPromises)
     })
-    return Promise.all(proposalPromises)
   }
 }
 

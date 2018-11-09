@@ -7,6 +7,7 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import IconButton from '@material-ui/core/IconButton';
+import { Typography } from '@material-ui/core';
 
 class Socialset extends React.Component {
   constructor(props) {
@@ -33,11 +34,7 @@ class Socialset extends React.Component {
     return (
       <div>
 
-        <ExpansionPanel onClick={this.toggle} expanded={this.state.isOpen}>
-          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} >
-            View Proofs of Identity
-        </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
+            <Typography variant="caption">View Proofs of Identity</Typography>
             <IconButton className='fab fa-facebook-square' color="primary" onClick={()=>this.openUrl(facebook)} />
             <IconButton className='fab fa-twitter-square' color="primary" onClick={()=>this.openUrl(twitter)}/>
 
@@ -47,8 +44,6 @@ class Socialset extends React.Component {
 
             <IconButton className='fab fa-instagram' color="primary" onClick={()=>this.openUrl(instagram)}/>
 
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
 
       </div>
 

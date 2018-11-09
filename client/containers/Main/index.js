@@ -9,14 +9,14 @@ import  { User }  from '../../components/shared/User';
 import { Payment } from '../../components/Payment';
 import { Voter } from '../../components/Voter';
 import { Stats } from '../../components/Stats';
-
+import Login from '../../components/Login'
 
 
 export default function Main() {
   return (
     <div>
   <User />
-        <Route exact path="/" component={Welcome} />
+        <Route exact path="/" component={OneOfUs} />
         <Route exact path="/welcome" component={Welcome} />
         <Route exact path="/oneOfUs" component={OneOfUs} />
         <Route exact path="/register" component={Welcome} />
@@ -25,10 +25,10 @@ export default function Main() {
         <Route exact path="/payment" component={Payment} />
         <Route exact path="/voter" component={Voter} />
         <Route exact path="/stats" component={Stats} />
+        <Route exact path="/login" component={Login} />
 
 
 
     </div>
   );
 }
-
