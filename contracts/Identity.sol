@@ -1,8 +1,8 @@
 pragma solidity ^0.4.24;
 
-import "@daostack/infra/contracts/votingMachines/GenesisProtocol.sol";
-import "@daostack/infra/contracts/Reputation.sol";
-import "@daostack/infra/contracts/votingMachines/VotingMachineCallbacksInterface.sol";
+import "../daostack/contracts/votingMachines/GenesisProtocol.sol";
+import "../daostack/contracts/Reputation.sol";
+import "../daostack/contracts/votingMachines/VotingMachineCallbacksInterface.sol";
 
 
 contract Identity is VotingMachineCallbacksInterface, ProposalExecuteInterface {
@@ -73,5 +73,17 @@ contract Identity is VotingMachineCallbacksInterface, ProposalExecuteInterface {
 
     function getTotalReputationSupply(bytes32) external view returns(uint256) {
         reputation.totalSupply();
+    }
+
+    function mintReputation(uint, address , bytes32) external returns(bool) {
+    }
+
+    function burnReputation(uint, address, bytes32) external returns(bool) {
+    }
+
+    function stakingTokenTransfer(StandardToken, address, uint, bytes32) external returns(bool) {
+    }
+
+    function balanceOfStakingToken(StandardToken, bytes32) external view returns(uint) {
     }
 }
