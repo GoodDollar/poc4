@@ -19,7 +19,7 @@ class Voter extends React.Component {
         this.Real = this.Real.bind(this);
         this.Fake = this.Fake.bind(this);
         this.updateSelectedCandidate = this.updateSelectedCandidate.bind(this);
-
+        
         this.state = {
             selectedCandidate:undefined,
         }
@@ -47,29 +47,27 @@ class Voter extends React.Component {
         const candidate = this.state.selectedCandidate || this.props.candidates[0];
         return (
             <div>
-                <p className="topHeader">Vote like no one is watching</p>
+                <div>Vote</div>
                 <CandidatesSelector isOpen={false} isVoter={true} candidates={candidatesList} slideHandler={this.updateSelectedCandidate} />
-
-                <div className="innerFlex">
-
                 <Grid container spacing={24}>
-                <Grid item xs={6} sm={6}>
 
-                    <a aria-label="Delete" onClick={()=>this.Fake(candidate)} className="roundButton">
-                    <img src="/assets/buttonDownvote.svg" />
-                    </a>
+                    <Grid item xs={6} sm={3}>
 
-                </Grid>
-                    <Grid item xs={6} sm={6}>
-
-                        <a aria-label="Delete" onClick={()=>this.Real(candidate)} className="roundButton">
-                        <img src="/assets/buttonUpvote.svg" />
-                        </a>
+                        <Button variant="extendedFab" aria-label="Delete" onClick={()=>this.Real(candidate)}>
+                            <Icon />
+                            Real
+                        </Button>
 
                     </Grid>
+                    <Grid item xs={6} sm={3}>
 
+                        <Button variant="extendedFab" aria-label="Delete" onClick={()=>this.Fake(candidate)}>
+                            <Icon />
+                            Fake
+                          </Button>
+
+                    </Grid>
                 </Grid>
-                </div>
             </div>
         )
     }

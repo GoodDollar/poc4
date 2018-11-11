@@ -73,17 +73,17 @@ class Voucher extends React.Component {
 
                         <Grid item xs={6} sm={6}>
 
-                            <Button aria-label="Delete" onClick={()=>this.Fake()}>
-                                <img src="/buttonFake.png" />
-                            </Button>
+                            <a aria-label="Delete" onClick={()=>this.Fake()} className="roundButton">
+                                <img src="./assets/buttonFake.svg" />
+                            </a>
 
                         </Grid>
 
                         <Grid item xs={6} sm={6}>
 
-                            <Button aria-label="Delete" onClick={()=>this.Vouche()} >
-                                <img src="/buttonVouch.png" />
-                            </Button>
+                            <a aria-label="Delete" onClick={()=>this.Vouche()} className="roundButton">
+                                <img src="./assets/buttonVouch.svg" />
+                            </a>
 
                         </Grid>
                     </Grid>

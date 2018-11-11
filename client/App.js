@@ -14,7 +14,12 @@ const store = configureStore()
 
 const theme = createMuiTheme({
   palette: {
-    primary: blue,
+    primary: {
+      main: '#13547A',
+    },
+    secondary: {
+      main: '#fff',
+    },
   },
 });
 

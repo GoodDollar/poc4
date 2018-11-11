@@ -15,7 +15,13 @@ import { bindActionCreators } from 'redux'
 class OneOfUs extends React.Component {
     constructor(props) {
         super(props);
+        this.goToVoucher = this.goToVoucher.bind(this);
     }
+
+    goToVoucher() {
+        this.props.history.push('voucher');
+    }
+
 
     handleClick = () => {
         this.props.history.push("voucher");
@@ -28,20 +34,24 @@ class OneOfUs extends React.Component {
                 <Grid container style={{ height: '100vh' }}
                 >
                     <Grid item xs={12}>
-                        <img src="/assets/mewe.png"
+                        <img src='/assets/mewe.png'
                             style={{
                                 height: '15vh',
                                 width: '15vh',
+                                marginTop:'4vh',
                                 border: '2px solid white',
                                 borderRadius: '5px'
                             }}
                         />
-                        <h3 style={{ color: 'white' }}>Identity made for you</h3>
+                        <h1 style={{ color: 'white', fontWeight: '300', textTransform: 'uppercase', fontSize: '20px' }}>Identity made for you</h1>
                     </Grid>
 
                     <Grid xs={12}>
-                        <img src="/assets/1_Visual.png"
-                        style={{height:'40vh'}}
+                        <img src='/assets/1_Visual.png'
+                            style={{
+                                height: 'auto',
+                                maxWidth:'200px'
+                            }}
                         />
                     </Grid>
 
@@ -53,20 +63,21 @@ class OneOfUs extends React.Component {
                             spacing={8}
                         >
                             <Grid item>
-                                <Button variant='contained'
-                                    onClick={this.handleClick}
-                                    color='primary'
-                                >vouch and earn
+                                <Button style={{ width: '30vh' }}
+                                    variant='contained'
+                                    onClick={this.goToVoucher}
+                                    color='secondary'
+                                >Vouch and earn
                                 </Button>
                             </Grid>
                             <Grid item >
-                                <Button variant='contained' color='secondary' disabled>create id</Button>
+                                <Button style={{ width: '30vh' }} variant='contained' color='secondary' disabled>Create id</Button>
                             </Grid>
                             <Grid>
                                 <Grid container alignItems={'center'}>
-                                    <h5 style={{color:'white'}}>powered by</h5>
-                                    <img src="/assets/GoodDollar_LOGO.png"
-                                    style={{height:'5vh'}}
+                                    <h5 style={{ color: 'white' }}>powered by</h5>
+                                    <img src='/assets/GoodDollar_LOGO.png'
+                                        style={{ height: '4vh' }}
                                     />
                                 </Grid>
                             </Grid>
@@ -76,7 +87,7 @@ class OneOfUs extends React.Component {
             </div>
         )
     }
-}
+  }
 
 OneOfUs.propTypes = {
     registered: PropTypes.string,

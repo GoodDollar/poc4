@@ -42,9 +42,9 @@ function getCandidatesData() {
    const candidates =
    [{
        id:1,
-       photo:"./assets/3.png",
-       firstname:"Sporty",
-       lastname:"Spice",
+       photo:"https://content-static.upwork.com/uploads/2014/10/01073427/profilephoto1.jpg",
+       firstname:"Suzie",
+       lastname:"Bar",
        proposalId:54151,
        ethOffering:0.5334,
        vouched:{amount:50,money:999.234},
@@ -56,14 +56,14 @@ function getCandidatesData() {
            instagram:"instagram.com",
            github:"github.com"
        }
-
-
+   
+   
      },
      {
        id:2,
-       photo:"./assets/1.png",
-       firstname:"Emma",
-       lastname:"Spice",
+       photo:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQY0ODGnaKeoz3ffQi0jID50h294U7bAg_sbj8fIiGmqTOsyq0LHw",
+       firstname:"Mark",
+       lastname:"Boskowitz",
        proposalId:2342,
        ethOffering:500.534534,
        vouched:{amount:1,money:45.234},
@@ -75,13 +75,13 @@ function getCandidatesData() {
         instagram:"instagram.com",
         github:"github.com"
     }
-
+   
      },
      {
        id:3,
-       photo:"./assets/4.png",
-       firstname:"Melanie",
-       lastname:"C",
+       photo:"https://static.makeuseof.com/wp-content/uploads/2015/11/perfect-profile-picture-background-constrast-solid.jpg",
+       firstname:"Sibua",
+       lastname:"Papao",
        proposalId:98,
        ethOffering:54.534534,
        vouched:{amount:12,money:999.234},
@@ -94,9 +94,9 @@ function getCandidatesData() {
         instagram:"instagram.com",
         github:"github.com"
     }
-
-
+   
+   
      }];
-
+     
     return Promise.resolve(candidates)
 }
