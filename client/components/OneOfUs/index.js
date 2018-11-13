@@ -1,16 +1,9 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom'
 import Button from '@material-ui/core/Button';
-import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
-import Paper from '@material-ui/core/Paper';
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-// import Mewe from './assets/mewe.png'
-// import CenterImage from './assets/1_Visual.png'
-// import Logo from './assets/GoodDollar_LOGO.png'
-
 
 class OneOfUs extends React.Component {
     constructor(props) {
@@ -46,7 +39,7 @@ class OneOfUs extends React.Component {
                         <h1 style={{ color: 'white', fontWeight: '300', textTransform: 'uppercase', fontSize: '20px' }}>Identity made for you</h1>
                     </Grid>
 
-                    <Grid xs={12}>
+                    <Grid item xs={12}>
                         <img src='/assets/1_Visual.png'
                             style={{
                                 height: 'auto',

@@ -3,9 +3,13 @@
   "private": true,
   "scripts": {
     "start": "meteor run",
+    "start:dev": "meteor run --settings settings-dev.json",
+    "debug": "meteor run --inspect --settings settings-dev.json",
+    "log": "set METEOR_PROFILE=1;set METEOR_LOG=debug;",
+    "verbose": "meteor --verbose --settings settings-dev.json",
     "test": "meteor test --once --driver-package meteortesting:mocha",
-    "migrate:develop": "truffle migrate --network development --reset",
-    "migrate:kovan": "truffle migrate --network kovan-fork --reset"
+    "migrate:develop": "truffle migrate --network development  --reset --verbose",
+    "migrate:kovan": "truffle migrate --network kovan-fork   --reset --verbose"
   },
   "dependencies": {
     "@babel/runtime": "^7.0.0-beta.55",
@@ -47,7 +51,6 @@
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
-    "babel-plugin-root-import": "^6.1.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-polyfill": "^6.26.0",

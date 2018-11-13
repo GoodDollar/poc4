@@ -10,10 +10,9 @@ import Web3 from 'web3'
 import Web3PromieEvent from 'web3-core-promievent'
 import WebsocketProvider from 'web3-providers-ws'
 import {promisifyTxHash} from '/imports/web3utils.js'
-import IdentityContract from '/ABI/Identity.json'
-import GenesisContract from '/ABI/GenesisProtocol.json'
-import GENContract from '/ABI/GEN.json'
-
+import IdentityContract from '/imports/blockchain/build/contracts/Identity.json'
+import GenesisContract from '/imports/blockchain/build/contracts/GenesisProtocol.json'
+import GENContract from '/imports/blockchain/build/contracts/StandardToken.json'
 import ethUtils from 'ethereumjs-util'
 import IPFS from 'ipfs-mini'
 import bs58 from 'bs58'
@@ -36,16 +35,19 @@ export default class IDDao {
 
     this.addr = addr
     this.pkey = pkey
+    console.log(this.pkey,this.pkey)
     this.publicKey = ethUtils.privateToPublic(ethUtils.toBuffer(pkey))
     this.ipfs = new IPFS({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' });
-    this.web3 = new Web3(new WebsocketProvider(Meteor.settings.public.infurawss))
+    this.web3 = new Web3(new WebsocketProvider(Meteor.settings.public.web3provider)) // can be - "wss://ropsten.infura.io/ws" or "ws://localhost:8545" or any other.
+
     this.web3.eth.accounts.wallet.add(pkey)
     this.web3.eth.defaultAccount = addr
-    this.identityContract = new this.web3.eth.Contract(IdentityContract.abi,"0x1bf6c607386b8471daad720283d0686b406530ae",{from:addr,gas:2000000})
-    this.genesisContract = new this.web3.eth.Contract(GenesisContract.abi,"0x0866dF55c550cedc4e504AdbaC9A45c06C670b78",{from:addr,gas:2000000})
-    this.GENContract = new this.web3.eth.Contract(GENContract.abi,GENContract.address,{from:addr,gas:4500000})
+    this.netword_id = Meteor.settings.public.network_id 
+    this.identityContract = new this.web3.eth.Contract(IdentityContract.abi,IdentityContract.networks[this.netword_id].address,{from:addr,gas:2000000})
+    this.genesisContract = new this.web3.eth.Contract(GenesisContract.abi,GenesisContract.networks[this.netword_id].address,{from:addr,gas:2000000})
+    this.GENContract = new this.web3.eth.Contract(GENContract.abi,GENContract.networks[this.netword_id].address,{from:addr,gas:4500000})
 
-    this.netword_id = Meteor.settings.public.network_id // ropsten network
+    
     this.gasPrice = this.web3.eth.getGasPrice()
     if(Meteor.isClient)
     {

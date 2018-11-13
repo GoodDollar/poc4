@@ -110,7 +110,6 @@ export class Blockstack {
     return address
   }
   init() {
-
     let loginPromise
     if(blockstack.isUserSignedIn()) loginPromise = Promise.resolve({})
     else if(blockstack.isSignInPending()) {
@@ -120,7 +119,7 @@ export class Blockstack {
       console.log("login in")
       this.userData = blockstack.loadUserData()
 
-        let web3 = new Web3(new WebsocketProvider(Meteor.settings.public.infurawss))
+        let web3 = new Web3(new WebsocketProvider(Meteor.settings.public.web3provider))
         let account = web3.eth.accounts.create();
         console.log(account)
 

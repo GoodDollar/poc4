@@ -1,7 +1,9 @@
 {
     "public":{
-      "network_id":6000,
+      "network_id":42,
       "infura":"https://kovan.infura.io/v3/",
-      "infurawss":"wss://kovan.infura.io/ws"
+      "web3provider":"wss://kovan.infura.io/ws",
+      "idDaoAddr":"0x27822d4556d2c6757D1094380eEc98200689932a",
+      "idDaoPKey":"0x8B10EB11CB17E56D318F7D54DE24EBF29BB815872B65E61FB8DE69406356EC2D"
     }
 }

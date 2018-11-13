@@ -1,20 +1,25 @@
 import IDDao from '/imports/IDDao'
 import { Mongo } from 'meteor/mongo'
 //h
-const iddaoAdmin = new IDDao("0x27822d4556d2c6757D1094380eEc98200689932a","0x8B10EB11CB17E56D318F7D54DE24EBF29BB815872B65E61FB8DE69406356EC2D")
-const Wallets = new Mongo.Collection("wallets")
+const iddaoAdmin = new IDDao(Meteor.settings.public.idDaoAddr,Meteor.settings.public.idDaoPKey) // using idDao Admin on the server side in the name of us - the creators - using a specific address&pKey to create idDao instance and do actions in the name of it.
+const Wallets = new Mongo.Collection("wallets") // keep our record of which address got initial money.
 //
 Meteor.methods({
-  async 'loadWallet'(addr) {
+  /*
+  ** Creating walltet to a new user and transferring intial money to it, from the GoodDollar creators.
+  ** Existing address should not get initial money - Wallets.insert will throw exception and break
+  */
+  async 'loadWallet'(addr) { 
       try
       {
 
-        Wallets.insert({_id:addr})
+        Wallets.insert({_id:addr}) // will throw exception if the wallet exists
         console.log("Loading wallet",addr)
         return iddaoAdmin.loadWallet(addr)
       }
       catch(e) {
         console.log(e.message)
+        return;
       }
   }
 })

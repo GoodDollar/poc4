@@ -1,9 +1,7 @@
 import ReactDOM from 'react-dom';
 import React from 'react'
-import blockstack from 'blockstack'
 import Blockstack from '/imports/Blockstack.js'
 import App from './App'
-import Web3 from 'web3'
 import ethUtils from 'ethereumjs-util'
 
 import '/imports/startup/client';
