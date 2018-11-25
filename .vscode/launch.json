@@ -18,34 +18,49 @@
             "name": "Meteor: Chrome",
             "url": "http://localhost:3000",
             "webRoot": "${workspaceFolder}",
-            "userDataDir": "${workspaceRoot}/.vscode/out/chrome",
-            "runtimeExecutable": "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
-            "sourceMaps": true
+            "sourceMaps": true,
+            "timeout": 120000,
+
         },
         {
             "type": "node",
             "request": "launch",
             "name": "Meteor: Node",
             "runtimeExecutable": "npm",
+            "cwd": "${workspaceRoot}/",
             "runtimeArgs": ["run", "debug"],
             "port": 9229,
-            "timeout": 60000,
+            "timeout": 120000,
             "trace": "verbose",
             "console": "integratedTerminal",
-            "breakOnLoad": true,
+            "restart": true,
             "sourceMaps": true,
-            "sourceMapPathOverrides": {
-              "*": "${webRoot}/*"
-            }
+            "protocol": "inspector",
+            
+        },
+        {
+            "name":"Meteor: Attach", 
+            "type":"node",
+            "request":"attach",
+            "cwd": "${workspaceRoot}/",
+            "stopOnEntry":false,
+
+            "port":9229,
+            "restart": true,
+            "sourceMaps": true,
+            "protocol": "inspector",
+
+
         }
         
           
         
     ],
     "compounds": [
+        
         {
             "name": "Meteor: All",
-            "configurations": ["Meteor: Node", "Meteor: Chrome"]
+            "configurations": ["Meteor: Attach", "Meteor: Chrome"]
         }
     ]
 }

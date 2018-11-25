@@ -3,7 +3,9 @@
         "network_id":6000, 
         "web3provider":"ws://localhost:8545",
         "idDaoAddr":"0x27822d4556d2c6757D1094380eEc98200689932a",
-        "idDaoPKey":"8b10eb11cb17e56d318f7d54de24ebf29bb815872b65e61fb8de69406356ec2d"
+        "idDaoPKey":"8b10eb11cb17e56d318f7d54de24ebf29bb815872b65e61fb8de69406356ec2d",
+        "proposalFirstBlock":0,
+        "isDebug":true
    
       
     }

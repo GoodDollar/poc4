@@ -8556,12 +8556,158 @@
   },
   "networks": {
     "6000": {
-      "events": {},
+      "events": {
+        "0x6adedc1a7f0019fe3b647be310835e7b1acfa71bcf1e4e3d454947f42154b847": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "_address",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "name": "_proposalId",
+              "type": "bytes32"
+            },
+            {
+              "indexed": true,
+              "name": "_identityHash",
+              "type": "bytes32"
+            }
+          ],
+          "name": "ProfileProposal",
+          "type": "event",
+          "signature": "0x6adedc1a7f0019fe3b647be310835e7b1acfa71bcf1e4e3d454947f42154b847"
+        },
+        "0xdf711910098db5d58aa652ef498f8e5d074e9e0865976dd2bb83ecfc7c675566": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "_address",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "name": "_proposalId",
+              "type": "bytes32"
+            },
+            {
+              "indexed": true,
+              "name": "_identityHash",
+              "type": "bytes32"
+            }
+          ],
+          "name": "ProfileApproved",
+          "type": "event",
+          "signature": "0xdf711910098db5d58aa652ef498f8e5d074e9e0865976dd2bb83ecfc7c675566"
+        },
+        "0x52e4fa873df309d2fc08dc19f7a9b6ffb5690d8dd0e5df4a8aaa2c15e40286c4": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "_address",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "name": "_proposalId",
+              "type": "bytes32"
+            },
+            {
+              "indexed": true,
+              "name": "_identityHash",
+              "type": "bytes32"
+            }
+          ],
+          "name": "ProfileDeclined",
+          "type": "event",
+          "signature": "0x52e4fa873df309d2fc08dc19f7a9b6ffb5690d8dd0e5df4a8aaa2c15e40286c4"
+        }
+      },
       "links": {},
-      "address": "0x7Ba3132Ba23450f53Fbf80f76397750B5e0a59F6",
-      "transactionHash": "0xc6e51447b3ab92a5e52a849f01b662e0ba99f92a9109bc9fd629bd3be61dde1c"
+      "address": "0xF1E559650849094Bb60b838159444a8F8865001f",
+      "transactionHash": "0x8b5ad211b0f32d72b362c05c3273f263f7831b60b6471dbd13787f0881de75ef"
+    },
+    "42": {
+      "events": {
+        "0x6adedc1a7f0019fe3b647be310835e7b1acfa71bcf1e4e3d454947f42154b847": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "_address",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "name": "_proposalId",
+              "type": "bytes32"
+            },
+            {
+              "indexed": true,
+              "name": "_identityHash",
+              "type": "bytes32"
+            }
+          ],
+          "name": "ProfileProposal",
+          "type": "event",
+          "signature": "0x6adedc1a7f0019fe3b647be310835e7b1acfa71bcf1e4e3d454947f42154b847"
+        },
+        "0xdf711910098db5d58aa652ef498f8e5d074e9e0865976dd2bb83ecfc7c675566": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "_address",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "name": "_proposalId",
+              "type": "bytes32"
+            },
+            {
+              "indexed": true,
+              "name": "_identityHash",
+              "type": "bytes32"
+            }
+          ],
+          "name": "ProfileApproved",
+          "type": "event",
+          "signature": "0xdf711910098db5d58aa652ef498f8e5d074e9e0865976dd2bb83ecfc7c675566"
+        },
+        "0x52e4fa873df309d2fc08dc19f7a9b6ffb5690d8dd0e5df4a8aaa2c15e40286c4": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "_address",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "name": "_proposalId",
+              "type": "bytes32"
+            },
+            {
+              "indexed": true,
+              "name": "_identityHash",
+              "type": "bytes32"
+            }
+          ],
+          "name": "ProfileDeclined",
+          "type": "event",
+          "signature": "0x52e4fa873df309d2fc08dc19f7a9b6ffb5690d8dd0e5df4a8aaa2c15e40286c4"
+        }
+      },
+      "links": {},
+      "address": "0x1Bf6C607386B8471dAAD720283D0686b406530aE",
+      "transactionHash": "0x8b5ad211b0f32d72b362c05c3273f263f7831b60b6471dbd13787f0881de75ef"
     }
   },
   "schemaVersion": "3.0.0-beta.1",
-  "updatedAt": "2018-11-13T10:03:43.085Z"
+  "updatedAt": "2018-11-21T11:43:02.311Z"
 }

@@ -4,7 +4,8 @@
   "scripts": {
     "start": "meteor run",
     "start:dev": "meteor run --settings settings-dev.json",
-    "debug": "meteor run --inspect --settings settings-dev.json",
+    "start:kovan": "meteor run --verbose --settings settings-kovan.json",
+    "debug": "meteor debug --inspect --settings settings-dev.json --inspect-brk",
     "log": "set METEOR_PROFILE=1;set METEOR_LOG=debug;",
     "verbose": "meteor --verbose --settings settings-dev.json",
     "test": "meteor test --once --driver-package meteortesting:mocha",

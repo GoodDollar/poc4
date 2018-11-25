@@ -35,14 +35,15 @@ export default class IDDao {
 
     this.addr = addr
     this.pkey = pkey
-    console.log(this.pkey,this.pkey)
-    this.publicKey = ethUtils.privateToPublic(ethUtils.toBuffer(pkey))
+    this.publicKey = ethUtils.privateToPublic(ethUtils.toBuffer('0x'+pkey))
     this.ipfs = new IPFS({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' });
     this.web3 = new Web3(new WebsocketProvider(Meteor.settings.public.web3provider)) // can be - "wss://ropsten.infura.io/ws" or "ws://localhost:8545" or any other.
 
     this.web3.eth.accounts.wallet.add(pkey)
     this.web3.eth.defaultAccount = addr
     this.netword_id = Meteor.settings.public.network_id 
+    console.log("this.netword_id",this.netword_id)
+    console.log(IdentityContract.networks[this.netword_id].address)
     this.identityContract = new this.web3.eth.Contract(IdentityContract.abi,IdentityContract.networks[this.netword_id].address,{from:addr,gas:2000000})
     this.genesisContract = new this.web3.eth.Contract(GenesisContract.abi,GenesisContract.networks[this.netword_id].address,{from:addr,gas:2000000})
     this.GENContract = new this.web3.eth.Contract(GENContract.abi,GENContract.networks[this.netword_id].address,{from:addr,gas:4500000})
@@ -60,14 +61,18 @@ export default class IDDao {
 
 
 /*
-load new user wallet with some eth and gen
+    Create new user wallet and top it with some eth and gen
  */
-async loadWallet(addr) {
+async createAndTopWallet(addr) {
   // let gas = await this.web3.eth.estimateGas({to:addr, from:this.addr, value:this.web3.utils.toWei("0.1", "ether")})
   let gas = 300000
   // let gasPrice = (await this.gasPrice)
+
+  // Top wallet with 0.1 ethers from this contract (GoodDollar) -> starting amount of the new wallet.
   let txHash = await this.web3.eth.sendTransaction({gas,to:addr, from:this.addr, value:this.web3.utils.toWei("0.1", "ether")})
   // gas = await this.GENContract.methods.transfer(addr,this.web3.utils.toWei("100", "ether")).estimateGas()
+
+  // Sending 100 ether to Genesis contract from this wallet.
   let genTxHash = await this.GENContract.methods.transfer(addr, this.web3.utils.toWei("100", "ether")).send()
   console.log("loaded wallet",addr)
 }
@@ -124,7 +129,6 @@ getIpfsHashFromBytes32(bytes32Hex) {
     console.log("Registered profile to DAO",txHash)
     return txHash
 
-
   }
 
   async vouch(proposalId,genAmount) {
@@ -161,7 +165,7 @@ getIpfsHashFromBytes32(bytes32Hex) {
   }
   listenProposals2() {
     return this.identityContract.getPastEvents('ProfileProposal', {
-      fromBlock: 9322796,
+      fromBlock: Meteor.settings.public.proposalFirstBlock,
       toBlock: 'latest'
     }, function(error, events){ console.log(error,events); })
     .then(events => {
@@ -195,7 +199,7 @@ getIpfsHashFromBytes32(bytes32Hex) {
   async listenProposals() {
     if(CONTRACTS_DISABLED)
       return
-    let startBlock = 9322796
+    let startBlock =  Meteor.settings.public.proposalFirstBlock
     let subscribed = this.identityContract.events.ProfileProposal({
       fromBlock: 9323973,
       toBlock: 'latest'

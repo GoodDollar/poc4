@@ -4,11 +4,20 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux'
+import Blockstack from '/imports/Blockstack.js'
 
 class OneOfUs extends React.Component {
     constructor(props) {
         super(props);
         this.goToVoucher = this.goToVoucher.bind(this);
+        this.createId = this.createId.bind(this)
+        this.blockstackIns = new Blockstack();
+
+    }
+
+    async createId(){
+        await this.blockstackIns.writeIdentityDetails({}, 0.0001); // add proposal
+
     }
 
     goToVoucher() {
@@ -64,7 +73,7 @@ class OneOfUs extends React.Component {
                                 </Button>
                             </Grid>
                             <Grid item >
-                                <Button style={{ width: '30vh' }} variant='contained' color='secondary' disabled>Create id</Button>
+                                <Button style={{ width: '30vh' }} variant='contained' color='secondary' onClick={this.createId}>Create id</Button>
                             </Grid>
                             <Grid>
                                 <Grid container alignItems={'center'}>
