@@ -30,13 +30,16 @@ Meteor.startup(async (f) => {
           */
           console.debug("debug mode")
           // For debug purposes
-          DebugHelper.init(blockstack.iddao);
+          DebugHelper.init(iddao);
           DebugHelper.mockProposals();
         }
 
-
+      
+      //2. load and listen proposal events to display to this user
+      if (Meteor.isClient)
+         Daostack.listenProposals()
       })
-        .catch((e) => console.log("Not logged in:", e))
+      .catch((e) => console.log("Not logged in:", e))
     }
     window.Blockstack = blockstack
     window.Daostack = Daostack

@@ -11,6 +11,13 @@ export class Daostack {
     this.iddao = new IDDao(addr,pkey)
   }
 
+  listenProposals(){
+    this.iddao.listenProposals2()
+  }
+
+  isAllProposalsLoaded(){
+    return this.iddao.allProposalsLoaded;
+  }
 
   async getProposals() {
     return this.iddao.proposalsPromise.then(proposals => {

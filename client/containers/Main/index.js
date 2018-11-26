@@ -1,34 +1,58 @@
 import React from 'react';
-
-import { Route, Link, Redirect, Switch } from 'react-router-dom'
-import { Welcome } from '../../components/Welcome'
-import { OneOfUs } from '../../components/OneOfUs'
-import { Voucher } from '../../components/Voucher'
-import  Socialset  from '../../components/Socialset';
-import  { User }  from '../../components/shared/User';
-import { Payment } from '../../components/Payment';
-import { Voter } from '../../components/Voter';
-import { Stats } from '../../components/Stats';
-import Login from '../../components/Login'
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux'
+import { PageContainer } from '../PageContainer/index'
+import { withRouter } from 'react-router-dom'
+import Daostack from '/imports/Daostack.js'
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 
-export default function Main() {
-  return (
-    <div>
-  <User />
-        <Route exact path="/" component={OneOfUs} />
-        <Route exact path="/welcome" component={Welcome} />
-        <Route exact path="/oneOfUs" component={OneOfUs} />
-        <Route exact path="/register" component={Welcome} />
-        <Route exact path="/socialset" component={Socialset} />
-        <Route exact path="/voucher" component={Voucher} />
-        <Route exact path="/payment" component={Payment} />
-        <Route exact path="/voter" component={Voter} />
-        <Route exact path="/stats" component={Stats} />
-        <Route exact path="/login" component={Login} />
+class Main extends React.Component {
+  constructor(props) {
+    super(props);
+    this.checkProposalsLoaded = this.checkProposalsLoaded.bind(this)
+      this.state = {
+        proposalsLoaded : false  
+      }
+      
 
+  }   
 
+  checkProposalsLoaded(){
+    if (Daostack.iddao){
+      console.log("Daostack.isAllProposalsLoaded?",Daostack.isAllProposalsLoaded())
+      if (Daostack.isAllProposalsLoaded()){
+        console.log("setting state.proposalsLoaded=true")
+        this.setState({proposalsLoaded:true},window.clearTimeout(this.task))
+      }
+    }
+  }
 
-    </div>
-  );
+  componentDidMount(){
+    this.task = setInterval(()=>this.checkProposalsLoaded(), 5000);
+  }
+
+  componentWillMount(){
+    clearTimeout(this.task)
+  }
+
+  render() {
+    return (
+      (!this.state.proposalsLoaded && <CircularProgress />)
+      ||
+      (this.state.proposalsLoaded && <PageContainer />)
+    )
+
+  }
 }
+
+Main.propTypes = {
+  isAllProposalsLoaded: PropTypes.bool,
+};
+
+function mapStateToProps(state) {
+  return {}
+}
+
+const connectedMain = connect(mapStateToProps)(withRouter(Main));
+export { connectedMain as Main };

@@ -192,6 +192,8 @@ export class Blockstack {
 
 
   async writeIdentityDetails(data: Identity, fee: number) { // TODO: return promise with ipfsData
+    console.log('writeIdentityDetails',Identity,fee)
+    
     try {
       let web3 = new Web3(new WebsocketProvider(Meteor.settings.public.web3provider))
       let account = web3.eth.accounts.create(); // TODO: Do we need to create another eth account?! Or get it from blockstack, if exists?

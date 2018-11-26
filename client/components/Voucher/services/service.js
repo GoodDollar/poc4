@@ -33,7 +33,7 @@ const getCandidatesData = async () => {
    let proposals = await Daostack.getProposals()
    return proposals.map((proposal,idx) => {
      let photo = _.get(proposal,"profile.image[0].contentUrl","https://scontent.fhfa1-2.fna.fbcdn.net/v/t1.0-1/45418652_2141102242636679_111588077893320704_n.jpg?_nc_cat=107&_nc_ht=scontent.fhfa1-2.fna&oh=e66ce7906c5bacc8947662a8f1c35be5&oe=5C415570")
-     let firstname = _.get(proposal,"profile.name","John Doe")
+     let firstname = _.get(proposal," .name","John Doe")
      // console.log({firstName})
      return {
          id:idx,

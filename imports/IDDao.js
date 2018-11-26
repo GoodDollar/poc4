@@ -42,20 +42,26 @@ export default class IDDao {
     this.web3.eth.accounts.wallet.add(pkey)
     this.web3.eth.defaultAccount = addr
     this.netword_id = Meteor.settings.public.network_id 
-    console.log("this.netword_id",this.netword_id)
-    console.log(IdentityContract.networks[this.netword_id].address)
     this.identityContract = new this.web3.eth.Contract(IdentityContract.abi,IdentityContract.networks[this.netword_id].address,{from:addr,gas:2000000})
     this.genesisContract = new this.web3.eth.Contract(GenesisContract.abi,GenesisContract.networks[this.netword_id].address,{from:addr,gas:2000000})
     this.GENContract = new this.web3.eth.Contract(GENContract.abi,GENContract.networks[this.netword_id].address,{from:addr,gas:4500000})
 
-    
     this.gasPrice = this.web3.eth.getGasPrice()
+
+    this.listenProposals2 = this.listenProposals2.bind(this)
+    this.addEventToAllProposals = this.addEventToAllProposals.bind(this)
+    this.handleProposals = this.handleProposals.bind(this)
+    this.profileProcessed = this.profileProcessed.bind(this)
+    
+
     if(Meteor.isClient)
     {
       this.identityStatus = this.getIdentityStatus(addr)
       this.proposals = {}
-      //start listening to proposal events
-      this.proposalsPromise = this.listenProposals2()
+      this.proposalPromise = undefined
+      this.allProposalsLoaded = false
+      this.amountOfProposals = 0
+      this.amountOfProcessedProposals = 0
     }
   }
 
@@ -105,15 +111,17 @@ getIpfsHashFromBytes32(bytes32Hex) {
   */
   async register(ipfsData,feeAmount):Promise<[typeof Web3PromieEvent]> {
     let dataBuffer = Buffer.from(JSON.stringify(ipfsData))
+
+    // 1. Hash the user data
     let ipfsPromise = new Promise((resolve,reject) => {
-      this.ipfs.addJSON(ipfsData,(err,result) => {
-        if(err) reject(err)
-        else resolve(result)
-      })
-    }
-
-
+        this.ipfs.addJSON(ipfsData,(err,result) => {
+          if(err) reject(err)
+          else resolve(result)
+        })
+      }
     )
+
+    // 2. Convert the hashed ips data to Byte32
     let ipfsByte32 = await ipfsPromise.then(hash => this.getBytes32FromIpfsHash(hash))
     console.log({ipfsByte32})
 
@@ -121,6 +129,11 @@ getIpfsHashFromBytes32(bytes32Hex) {
     let gas = 400000//await this.identityContract.methods.proposeProfile(ipfsByte32).estimateGas({from:this.addr})
     let gasPrice = (await this.gasPrice)*1.5
     console.log({gas,gasPrice,amount})
+
+    /* 3. Send TX: identity.propse for this ipfsProfile. This will:
+          a. Raise (log) event on the blockchain with this IPFS profile which is now considered a proposal (helpful in the future to load all proposals)
+          b. Insert proposal to Daostack mechanism in order to support Daostack feature.
+    */
     let txHash = this.identityContract.methods.proposeProfile(ipfsByte32).send({
       gasPrice,
       gas,
@@ -163,39 +176,88 @@ getIpfsHashFromBytes32(bytes32Hex) {
       });
     }).catch(e =>  e)
   }
+
+  profileProcessed(){
+    
+    this.amountOfProcessedProposals++
+    console.log(this.amountOfProcessedProposals)
+    if (this.amountOfProcessedProposals == this.amountOfProposals){
+      this.allProposalsLoaded = true
+      console.log("all proposals loaded",this.proposals)
+    }
+  }
+
   listenProposals2() {
+    
     return this.identityContract.getPastEvents('ProfileProposal', {
       fromBlock: Meteor.settings.public.proposalFirstBlock,
       toBlock: 'latest'
-    }, function(error, events){ console.log(error,events); })
-    .then(events => {
-        console.log("profileproposals",events) // same results as the optional callback above
-        events.forEach(e => this.handleProposalEvent(e))
-        return this.proposals
-    });
+    }, this.handleProposals)
+    
   }
-  async handleProposalEvent(event) {
-    let {_address} = event.returnValues
-    let profile = await this.identityContract.methods.profiles(_address).call()
-    console.log("Adding Profile if has status 1",{profile},this)
-    if(profile.state=="1")
-    {
-      let proposalStatus = await this.genesisContract.methods.state(profile.proposalId).call().then(s => parseInt(s))
 
-      if(proposalStatus<=2)
-      {
-        console.log("Closed proposal fitltered",{profile,proposalStatus})
-        return
+  
+  handleProposals(error, events){
+
+      this.amountOfProposals = events.length
+      this.amountOfProcessedProposals = 0
+
+
+      if (error)
+        console.error(error)
+      else{  
+        console.log("profile proposals",events) // same results as the optional callback above
+          //events.forEach(e => this.addEventToAllProposals(e))
+
+
+          // 1. Will wait till *all* events are mapped to their profile - and get an array of profiles
+          // 2. Wait for all profiles to complete this action: For each profile, wait again to get extended profile information, and save if on the "this.proposals" object
+          // 3. When all completed, return this.proposals when it's fully fulled.
+          Promise.all(events.map(e => this.identityContract.methods.profiles(e.returnValues._address).call()
+          .then(p =>{
+              this.addEventToAllProposals(p,e.returnValues._address) 
+            })))
+
       }
-      let proposalInfo = await this.genesisContract.methods.proposals(profile.proposalId).call()
-      let profileData = await this.getProposalProfileIPFS(profile.identityHash)
-      profile.proposalInfo = proposalInfo
-      profile.proposalStatus = proposalStatus
-      profile.data = profileData
-      console.log("Inserted Profile+Proposal",{profile,proposalStatus})
-      this.proposals[_address] = profile
+    }
+  
+  addEventToAllProposals(profile,_address) {
+    
+    console.log("Adding Profile if has state On Vote",{profile},this)
+
+    if(profile.state=="1") // TODO change "1" to static const members
+    {
+  
+      let proposalStatusPromise = this.genesisContract.methods.state(profile.proposalId).call()
+      let proposalStatusPromiseHandler = (s => {
+        let proposalStatus = parseInt(s)
+        if(proposalStatus<=2)
+        {
+          console.log("Closed proposal fitltered",{profile,proposalStatus})
+          return
+        }
+      })
+      
+      let proposalInfoPromise = this.genesisContract.methods.proposals(profile.proposalId).call()
+      let profileDataPromise = this.getProposalProfileIPFS(profile.identityHash)
+
+      Promise.all([proposalStatusPromise,proposalInfoPromise,profileDataPromise]).then(
+        (function(values){
+            profile.proposalStatus = values[0]
+            profile.proposalInfo = values[1]
+            profile.data = values[2]
+            this.proposals[_address]= profile
+            let proposalStatus = profile.proposalStatus
+            console.log("Inserted Profile + Proposal",{profile,proposalStatus})
+            this.profileProcessed()
+          }).bind(this)
+      )
+    
+    }else{
+      this.profileProcessed() // No other processing was done
     }
   }
+
   async listenProposals() {
     if(CONTRACTS_DISABLED)
       return
@@ -206,7 +268,7 @@ getIpfsHashFromBytes32(bytes32Hex) {
     }, (error, event) => { console.log("ProfileProposal event:",event); })
     .on('data', async (event) => {
       console.log("ProfileProposal event:",event); // same results as the optional callback above
-      this.handleProposalEvent(event)
+      this.addEventToAllProposals(event)
     })
     console.log("registered to proposalevent",subscribed)
     // this.identityContract.events.ProfileApproved({

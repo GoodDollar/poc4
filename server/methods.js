@@ -10,7 +10,7 @@ Meteor.methods({
   ** Existing address should not get initial money - Wallets.insert will throw exception and break
   */
   async 'loadWallet'(addr) {
-    console.log("Trying to load wallet", addr)
+    console.log("Trying to load wallet for address:", addr)
 
     if (Wallets.findOne(addr)) { // we will not create a registration record in GoodDollar
       console.log('wallet exists')
