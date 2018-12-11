@@ -9,6 +9,7 @@ export class Daostack {
 
   init(addr,pkey){
     this.iddao = new IDDao(addr,pkey)
+    return this.iddao
   }
 
   listenProposals(){

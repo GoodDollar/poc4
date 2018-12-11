@@ -1,11 +1,23 @@
 {
     "public":{
-      "network_id":42,
-      "infura":"https://kovan.infura.io/v3/",
-      "web3provider":"wss://kovan.infura.io/ws",
-      "idDaoAddr":"0x27822d4556d2c6757D1094380eEc98200689932a",
-      "idDaoPKey":"8B10EB11CB17E56D318F7D54DE24EBF29BB815872B65E61FB8DE69406356EC2D",
-      "proposalFirstBlock":9322796,
-      "isDebug":false
+      "network_id":42,   
+      "httpWeb3provider":"https://kovan.infura.io/v3/",
+      "websocketWeb3Provider":"wss://kovan.infura.io/ws",
+      "identity":{
+        "owner_address": "0x27822d4556d2c6757D1094380eEc98200689932a",
+        "contract_address":"0x1Bf6C607386B8471dAAD720283D0686b406530aE"
+      },
+
+      "genesis":{
+        "owner_address": "0x1bf4e7d549fd7bf9c6ba3be8bd2b9af62f086220",
+        "contract_address":"0x0866dF55c550cedc4e504AdbaC9A45c06C670b78"
+      },
+
+      "gen":{
+        "owner_address": "0xBd227aee8B32cbf43F27473c1f46c610F658e76b",
+        "contract_address":"0x543Ff227F64Aa17eA132Bf9886cAb5DB55DCAddf"
+      },
+      "proposalFirstBlock": 9496201,
+      "isDebug":true
     }
 }

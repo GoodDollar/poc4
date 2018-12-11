@@ -3,6 +3,7 @@ import blockstack from 'blockstack'
 import _ from 'lodash'
 import ethUtils from 'ethereumjs-util'
 import IDDao from '/imports/IDDao.js'
+import Utils from '/imports/Utils.js'
 import Web3 from 'web3'
 // $FlowFixMe
 import Web3PromieEvent from 'web3-core-promievent'
@@ -148,7 +149,8 @@ export class Blockstack {
       profile.address = this.getUserEthAddr()
       console.log('profile.address', profile.address)
       
-      await Meteor.call('loadWallet', profile.address)
+     let walletLoadedOnServer =  await Meteor.call('loadWallet', profile.address)
+     console.log("walletLoadedOnServer?",walletLoadedOnServer) // TODO: return server errors if any
 
       let res = await blockstack.putFile("profile.js", JSON.stringify(profile), { encrypt: false })
     }
@@ -173,7 +175,7 @@ export class Blockstack {
 
     // User is logged in.
     loginObject = { "loggedState": LOGGED_STATE.LOGGED_IN, "loginPromise": Promise.resolve({}) }
-    loginObject.loginPromise = loginObject.loginPromise.then(this.loadLoggedInUser)
+    loginObject.loginPromise = loginObject.loginPromise.then(this.loadLoggedInUser) // TODO: Loading logged in user from the server is not part of blockstack responsibility
 
     return loginObject;
 
@@ -195,7 +197,7 @@ export class Blockstack {
     console.log('writeIdentityDetails',Identity,fee)
     
     try {
-      let web3 = new Web3(new WebsocketProvider(Meteor.settings.public.web3provider))
+      let web3 = Utils.getWeb3()
       let account = web3.eth.accounts.create(); // TODO: Do we need to create another eth account?! Or get it from blockstack, if exists?
       console.log('account', account)
       

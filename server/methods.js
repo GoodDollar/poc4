@@ -1,7 +1,13 @@
 import IDDao from '/imports/IDDao'
 import { Mongo } from 'meteor/mongo'
+import Secrets from '../Secrets.json'
 
-const iddaoAdmin = new IDDao(Meteor.settings.public.idDaoAddr, Meteor.settings.public.idDaoPKey) // using idDao Admin on the server side in the name of us - the creators - using a specific address&pKey to create idDao instance and do actions in the name of it.
+const network_id = Meteor.settings.public.network_id
+console.log("network_id:",network_id)
+let owner_address = Meteor.settings.public.identity.owner_address
+let owner_pkey = Secrets.ethereum[network_id].identity.owner_pkey
+console.log({owner_address, owner_pkey})
+const iddaoAdmin = new IDDao(owner_pkey) // using idDao Admin on the server side in the name of us - the creators - using a specific address&pKey to create idDao instance and do actions in the name of it.
 const Wallets = new Mongo.Collection("wallets") // keep our record of which address got initial money.
 //
 Meteor.methods({
@@ -14,19 +20,24 @@ Meteor.methods({
 
     if (Wallets.findOne(addr)) { // we will not create a registration record in GoodDollar
       console.log('wallet exists')
-      return;
+      return true;
     }
+
 
     try {
 
       console.log('wallet does not exists. creating new wallet for address and topping it')
-      Wallets.insert({ _id: addr }) // will throw exception if the wallet exists
 
-      return iddaoAdmin.createAndTopWallet(addr)
+      let walltedCreated = iddaoAdmin.createAndTopWallet(addr)
+      console.log("walltedCreated?",walltedCreated)
+      if (walltedCreated)
+       Wallets.insert({ _id: addr }) // will throw exception if the wallet exists
+
+      return walltedCreated
     }
     catch (e) {
       console.log(e.message)
-      return;
+      return false;
     }
   }
 })

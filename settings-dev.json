@@ -1,12 +1,24 @@
 {
-    "public":{
-        "network_id":6000, 
-        "web3provider":"ws://localhost:8545",
-        "idDaoAddr":"0x27822d4556d2c6757D1094380eEc98200689932a",
-        "idDaoPKey":"8b10eb11cb17e56d318f7d54de24ebf29bb815872b65e61fb8de69406356ec2d",
-        "proposalFirstBlock":0,
-        "isDebug":true
-   
-      
-    }
+  "public":{
+    "network_id":6000,
+    "useWebSocket":true,
+    "httpWeb3provider":"http://localhost:8545",
+    "websocketWeb3Provider":"ws://127.0.0.1:8545",
+    "identity":{
+      "owner_address": "0x817DC2AA22a3DfdB7Daec2E06534387F1b0807d9",
+      "contract_address":"0x9Cd8157599256D13a6Db8d4405dA25034ea559F2"
+    },
+
+    "genesis":{
+      "owner_address": "0x817DC2AA22a3DfdB7Daec2E06534387F1b0807d9",
+      "contract_address":"0x56f99aBAA17c4DD204FeD0029dea6DF11497612d"
+    },
+
+    "gen":{
+      "owner_address": "0x817DC2AA22a3DfdB7Daec2E06534387F1b0807d9",
+      "contract_address":"0x4Bd2c6F2e536716b7566ff830aB4b1681AB4B453"
+    },
+    "proposalFirstBlock": 0,
+    "isDebug":true
+  }
 }

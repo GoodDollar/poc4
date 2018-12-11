@@ -27,7 +27,6 @@ class PageContainer extends Component {
     render() {
         return (
             <div>
-                PageConteiner
                 <User />
                 <Route exact path="/" component={OneOfUs} />
                 <Route exact path="/welcome" component={Welcome} />

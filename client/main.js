@@ -21,7 +21,7 @@ Meteor.startup(async (f) => {
 
       loginObject.loginPromise.then(() => {
                 
-        let iddao = Daostack.init(blockstack.getUserEthAddr(), blockstack.getUserPrivateKey())
+        let iddao = Daostack.init(blockstack.getUserPrivateKey())
 
         if (Meteor.settings.public.isDebug){  
           /* TODO: 
@@ -30,24 +30,27 @@ Meteor.startup(async (f) => {
           */
           console.debug("debug mode")
           // For debug purposes
-          DebugHelper.init(iddao);
+          DebugHelper.init();
           DebugHelper.mockProposals();
         }
 
       
       //2. load and listen proposal events to display to this user
       if (Meteor.isClient)
-         Daostack.listenProposals()
+         proposalsLoaded = Daostack.listenProposals() // TODO: retrun errors here
+         console.log("proposalsLoaded?",proposalsLoaded)
       })
       .catch((e) => console.log("Not logged in:", e))
     }
     window.Blockstack = blockstack
     window.Daostack = Daostack
+    window.ethUtils = ethUtils
+
     const profile = await blockstack.getProfile()
     console.log({ profile })
     ReactDOM.render(
       <App />,
-      document.getElementById('app')
+      document.getElementById('app') 
     );
   }
 });

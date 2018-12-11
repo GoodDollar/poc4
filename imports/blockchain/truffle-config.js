@@ -9,9 +9,18 @@ const mnemonic = "measure soda royal what keen vacuum arm view portion clerk mot
 const providerUrl = "https://mainnet.infura.io/v3/5b5cc6e48f8d4e33813555faab27bc08";
 const fullPathBuildDirectory = `${__dirname}/build/contracts`;
 
-
+//   solc compilers works only with truffle 5.0.0 and above.
 module.exports = {
   contracts_build_directory: fullPathBuildDirectory,
+  compilers: {
+    solc: {
+      version: "0.4.25",
+      optimizer: {
+        enabled: false,
+        runs: 200
+      }
+    },
+  },
   networks: {
     live: {
       network_id: 1,
@@ -21,8 +30,10 @@ module.exports = {
     },
     ropsten: {
       network_id: 3,
-      host: "localhost",
-      port: 8545,
+      provider: function() {
+        return new HDWalletProvider(mnemonic, "https://ropsten.infura.io/v3/143f9cf968fe4c3da0db77ff525e0da4")
+      },
+      
       gas: 4543760
     },
     rinkeby: {
@@ -42,8 +53,8 @@ module.exports = {
       network_id: "*",
       host: "localhost",
       port: 8545,
-      gas: 4543760
-    },
+      from:'0x817DC2AA22a3DfdB7Daec2E06534387F1b0807d9' // special parity dev account with lot's of ether. don't change.
+     },
   },
   solc: {
     optimizer: {

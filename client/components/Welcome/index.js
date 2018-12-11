@@ -26,7 +26,7 @@ class Welcome extends React.Component {
             <div>
 
                 <img src="/mewe-logo.png" className="logoImage" alt="" />
-                <h1 variant="h6" gutterBottom className="heroTitle">IDENTITY MADE FOR YOU</h1>
+                <h1 variant="h6"  className="heroTitle">IDENTITY MADE FOR YOU</h1>
                 <img src="/hero-image.png" className="heroImage"  alt="" />
                 <br />
                 <Button variant="contained" color="secondary" className="heroVouchButton">Vouch and earn</Button>

@@ -1,6 +1,5 @@
 //@flow
 import _ from 'lodash'
-import Web3 from 'web3'
 import WebsocketProvider from 'web3-providers-ws'
 import blockstack from 'blockstack'
 import Web3PromieEvent from 'web3-core-promievent'
@@ -8,19 +7,23 @@ import {promisifyTxHash} from '/imports/web3utils.js'
 import ethUtils from 'ethereumjs-util'
 import IPFS from 'ipfs-mini'
 import bs58 from 'bs58'
+import Utils from '/imports/Utils.js'
+import Accounts from 'web3-eth-accounts'
+const stripHexPrefix = require('strip-hex-prefix');
 
 export class DebugHelper {
     iddao: IDDao
 
     constructor() {
         this.BlockstackUsersData = []
-        this.web3 = new Web3(new WebsocketProvider(Meteor.settings.public.web3provider))
+        this.web3 = Utils.getWeb3()
+        this.accountsUtils = new Accounts(this.web3.currentProvider)
 
         
     }
 
-    init(iddao) {
-        this.iddao = iddao
+    init() {
+
     }
 
     getBytes32FromIpfsHash(ipfsListing) {
@@ -45,13 +48,20 @@ export class DebugHelper {
             let gas = 400000//await this.identityContract.methods.proposeProfile(ipfsByte32).estimateGas({from:this.addr})
             let gasPrice = (await this.iddao.gasPrice)*1.5
             console.log({gas,gasPrice,amount})
+            console.log("proposing from:",ipfsData.address.address)
             let txHash = this.iddao.identityContract.methods.proposeProfile(ipfsByte32).send({
-                from:'0x27822d4556d2c6757D1094380eEc98200689932a',
+                from:ipfsData.address.address,
                 gasPrice,
                 gas,
                 value: amount
             })
-            console.log("Registered profile to DAO",txHash)
+
+            txHash.then(res=>{
+                console.log("Registered profile to DAO",res)
+            }).catch(err=>{
+                console.error(err)
+            })
+            
             return txHash
 
   }
@@ -60,10 +70,16 @@ export class DebugHelper {
     async mockProposals() {
 
 
-        let fee = 0.0001
-        let account = this.web3.eth.accounts.create();
-        for (let i = 0; i < 4; i++) {
+        let fee = 0.1
+        
 
+        for (let i = 0; i < 4; i++) {
+            let account = this.accountsUtils.create();
+            console.log()
+            let iddao = Daostack.init(stripHexPrefix(account.privateKey))
+            this.iddao = iddao
+    
+            let walletLoadedOnServer =  await Meteor.call('loadWallet', account.address)
             let username = "generated.id.blockstack" + i
             let firstname = "firstname"+i 
             let lastname = "lastname" +i
@@ -122,7 +138,8 @@ export class DebugHelper {
             }
 
             
-            let res = await this.register(ipfsData, fee)
+            //let res = await this.register(ipfsData, fee)
+            let res = await this.iddao.register(ipfsData, fee)
             console.log('wrote identity to dao', { res })
         }
     }
