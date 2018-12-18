@@ -45,7 +45,7 @@
     "truffle": "^5.0.0-beta.2",
     "truffle-contract": "^3.0.5",
     "truffle-hdwallet-provider": "^0.0.6",
-    "web3": "1.0.0-beta.34",
+    "web3": "1.0.0-beta.36",
     "web3-core-promievent": "^1.0.0-beta.36",
     "web3-eth-accounts": "^1.0.0-beta.36",
     "web3-providers-ws": "^1.0.0-beta.36",

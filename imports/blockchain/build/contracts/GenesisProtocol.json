@@ -81639,15 +81639,20 @@
     "version": "0.4.25+commit.59dbf8f1.Emscripten.clang"
   },
   "networks": {
+    "42": {
+      "events": {},
+      "links": {},
+      "address": "0x0866dF55c550cedc4e504AdbaC9A45c06C670b78"
+    },
     "6000": {
       "events": {},
       "links": {},
-      "address": "0x58D777c5532297A578c0F1f512dfda2617e779B1",
-      "transactionHash": "0x1923cb2235f7af8fe5c01fa1e6558a5a294a7708ea23eb2926b0b37043f98d8d"
+      "address": "0x49e57004a59dC1bD7EFEC9B38fd721436816E4E8",
+      "transactionHash": "0xb5cb89d34258bba22264e4286651fb19fc28c29cf2f5ecf5239240945c0c3eb6"
     }
   },
   "schemaVersion": "3.0.0-beta.2",
-  "updatedAt": "2018-12-11T12:42:49.208Z",
+  "updatedAt": "2018-12-16T13:21:49.676Z",
   "devdoc": {
     "methods": {
       "cancelProposal(bytes32)": {

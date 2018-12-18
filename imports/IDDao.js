@@ -32,6 +32,11 @@ export default class IDDao {
 
   constructor(pkey: string) {
 
+if (Meteor.isClient) {
+  console.log("%c Client mode", 'background: #222; color: #bada55')
+}else{
+  console.log("%c Server mode", 'background: blue; color: white')
+}
 
     // $FlowFixMe
     console.log('creating IDao instance for pkey:',pkey)
@@ -49,7 +54,8 @@ export default class IDDao {
     //this.web3 = new Web3(new WebsocketProvider(Meteor.settings.public.web3provider)) // can be - "wss://ropsten.infura.io/ws" or "ws://localhost:8545" or any other.
     
 
-    this.web3.eth.accounts.wallet.add(this.walletOwnerAccount)
+    //this.web3.eth.accounts.wallet.add(this.walletOwnerAccount)
+    this.web3.eth.accounts.wallet.add(this.pkey) // using pKey because using external provider, (Infura in your case), when you specify web3.eth.defaultAccount you must add its private key in web3.eth.accounts.wallet (also referred to as a keystore), https://ethereum.stackexchange.com/questions/26999/invalid-json-rpc-response-error-for-sendtransaction-on-infura-ropsten-node-t
     console.log('adding pkey,walletOwner', { pkey, "walletOwner":this.walletOwnerPubKey })
     console.log('wallet entry for',  this.walletOwnerAccount.address,"' is ",this.web3.eth.accounts.wallet[this.walletOwnerAccount.address])
     
@@ -62,11 +68,15 @@ export default class IDDao {
     console.log("Genesis contract address:",GenesisContract.networks[this.netword_id].address)
     console.log("GENContract contract address:",GENContract.networks[this.netword_id].address)
 
-    this.identityContract = new this.web3.eth.Contract(IdentityContract.abi, IdentityContract.networks[this.netword_id].address, {  gas: 2000000 })
-    this.genesisContract = new this.web3.eth.Contract(GenesisContract.abi, GenesisContract.networks[this.netword_id].address, { from: this.walletOwnerAddress, gas: 2000000 })
-    this.GENContract = new this.web3.eth.Contract(GENContract.abi, GENContract.networks[this.netword_id].address, { from: this.walletOwnerAddress, gas: 4500000 })
+    this.gasPrice = 2400000000
+    this.gasLimit = 2000000
 
-    this.gasPrice = this.web3.eth.getGasPrice()
+    this.identityContract = new this.web3.eth.Contract(IdentityContract.abi, IdentityContract.networks[this.netword_id].address, {  gas: this.gasLimit })
+    this.genesisContract = new this.web3.eth.Contract(GenesisContract.abi, GenesisContract.networks[this.netword_id].address, { from: this.walletOwnerAddress, gas: this.gasLimit })
+    this.GENContract = new this.web3.eth.Contract(GENContract.abi, GENContract.networks[this.netword_id].address, { from: this.walletOwnerAddress, gas: 4500000 })
+    
+    //this.web3.eth.getGasPrice().then(x=> this.gasPrice = x)
+    
 
     this.listenProposals2 = this.listenProposals2.bind(this)
     this.addEventToAllProposals = this.addEventToAllProposals.bind(this)
@@ -75,8 +85,7 @@ export default class IDDao {
 
 
     if (Meteor.isClient) {
-      this.identityStatus = this.getIdentityStatus(this.walletOwnerAddress)
-      console.log("this.identityStatus", this.identityStatus)
+      this.identityStatus = this.getIdentityStatus(this.walletOwnerAddress).then(x=>{this.identityStatus=x; console.log("this.identityStatus", this.identityStatus)})
       this.proposals = {}
       this.proposalPromise = undefined
       this.allProposalsLoaded = false
@@ -90,17 +99,28 @@ export default class IDDao {
       Create new user wallet and top it with some eth and gen
    */
   async createAndTopWallet(toAddr) {
-    // let gas = await this.web3.eth.estimateGas({to:addr, from:this.walletOwner, value:this.web3.utils.toWei("0.1", "ether")})
+    // let gas = await this.web3.eth.estimateGas({to:toAddr, from:this.walletOwner, value:this.web3.utils.toWei("0.1", "ether")})
     let gas = 300000
-    // let gasPrice = (await this.gasPrice)
+    let gasPrice = (await this.gasPrice)
 
     // Top wallet with 0.1 ethers from this contract (GoodDollar) -> starting amount of the new wallet.
-    console.log("sending 0.1 ether to create wallet in address ", toAddr)
-    let txHash = await this.web3.eth.sendTransaction({ to: toAddr, from: this.walletOwnerAddress, value: this.web3.utils.toWei("0.1", "ether") }).catch(err => {
-      console.error("sendTransaction", err)
-      throw (err)
-    })
+    console.log("sending 0.1 ether to create wallet in address ", toAddr, ' from ',this.walletOwnerAddress)
+    let rawTransaction = {
+          "from": this.walletOwnerAddress,
+          "to": toAddr,
+          "value": this.web3.utils.toHex(this.web3.utils.toWei("0.1", "ether")),
+          gas,
+          "chainId": parseInt(this.netword_id)
+        };
 
+    console.log("signing transaction")
+     await  this.walletOwnerAccount.signTransaction(rawTransaction).then(signedTx =>{
+        console.log("tx signed, tx:",signedTx)
+        this.web3.eth.sendSignedTransaction(signedTx.rawTransaction)
+        }).catch(err => {console.error("sendTransaction", err)})
+      
+    
+    //let txHash = await this.web3.eth.sendTransaction({ to: toAddr, value: this.web3.utils.toWei("0.1", "ether") }).catch(err => {console.error("sendTransaction", err)})
     // gas = await this.GENContract.methods.transfer(addr,this.web3.utils.toWei("100", "ether")).estimateGas()
 
     // Sending 100 ether to Genesis contract from this wallet.

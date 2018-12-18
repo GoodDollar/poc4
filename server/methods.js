@@ -28,7 +28,7 @@ Meteor.methods({
 
       console.log('wallet does not exists. creating new wallet for address and topping it')
 
-      let walltedCreated = iddaoAdmin.createAndTopWallet(addr)
+      let walltedCreated = await iddaoAdmin.createAndTopWallet(addr)
       console.log("walltedCreated?",walltedCreated)
       if (walltedCreated)
        Wallets.insert({ _id: addr }) // will throw exception if the wallet exists
