@@ -1,9 +1,13 @@
 require("babel-polyfill");
 require("babel-register")({
-  "presets": ["es2015"],
-  "plugins": ["syntax-async-functions","transform-regenerator"]
+  "presets": ["env"],
+  "plugins": ["syntax-async-functions","transform-regenerator"],
+  ignore: /node_modules\/(?!openzeppelin-solidity)/
 });
-
+/*require("babel-register")({
+  ignore: /node_modules\/(?!zeppelin-solidity)/
+});
+require("babel-polyfill");*/
 const HDWalletProvider = require("truffle-hdwallet-provider");
 const mnemonic = "measure soda royal what keen vacuum arm view portion clerk motion dizzy";
 const providerUrl = "https://mainnet.infura.io/v3/5b5cc6e48f8d4e33813555faab27bc08";
@@ -54,6 +58,12 @@ module.exports = {
       network_id: "*",
       host: "localhost",
       port: 8545,
+      //from:'0x817DC2AA22a3DfdB7Daec2E06534387F1b0807d9' // special parity dev account with lot's of ether. don't change.
+     },
+     test: {
+      network_id: "*",
+      host: "localhost",
+      port: 9545,
       //from:'0x817DC2AA22a3DfdB7Daec2E06534387F1b0807d9' // special parity dev account with lot's of ether. don't change.
      },
   },
