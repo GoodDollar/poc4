@@ -1,4 +1,6 @@
 //@flow
+
+/* imports */
 import './App.css'
 import React, { Component } from 'react'
 import { Provider, connect } from 'react-redux'
@@ -6,8 +8,7 @@ import configureStore from './store/configureStore'
 import { createMuiTheme } from '@material-ui/core/styles'
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider'
 
-
-
+/* exports */
 const store = configureStore()
 const theme = createMuiTheme({
   typography: {
@@ -24,6 +25,7 @@ const theme = createMuiTheme({
 });
 
 class App extends Component {
+
   state = {users: []}
 
   componentDidMount() {
