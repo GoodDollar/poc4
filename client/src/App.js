@@ -1,9 +1,10 @@
-import './App.css';
-import React, { Component } from 'react';
-import { Provider, connect } from 'react-redux';
+//@flow
+import './App.css'
+import React, { Component } from 'react'
+import { Provider, connect } from 'react-redux'
 import configureStore from './store/configureStore'
-import { createMuiTheme } from '@material-ui/core/styles';
-import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
+import { createMuiTheme } from '@material-ui/core/styles'
+import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider'
 
 
 
@@ -28,7 +29,7 @@ class App extends Component {
   componentDidMount() {
     fetch('/users')
       .then(res => res.json())
-      .then(users => this.setState({ users }));
+      .then(users => this.setState({ users }))
   }
 
   
@@ -54,4 +55,4 @@ class App extends Component {
 }
 
 
-export default App;
+export default App

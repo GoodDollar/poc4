@@ -1,0 +1,8 @@
+{
+    "plugins": ["syntax-async-functions","transform-regenerator"],
+    "presets":["env","@babel/preset-flow"],
+    "env": { // For React Native
+        "production": {
+        }
+    }
+}
