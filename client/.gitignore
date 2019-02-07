@@ -2,6 +2,8 @@
 
 # dependencies
 /node_modules
+daostack/
+Secrets.json
 /.pnp
 .pnp.js
 

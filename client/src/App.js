@@ -1,6 +1,7 @@
 //@flow
 import './App.css'
 import React, { Component } from 'react'
+import { Main } from './containers/Main'
 import { Provider, connect } from 'react-redux'
 import configureStore from './store/configureStore'
 import { createMuiTheme } from '@material-ui/core/styles'
@@ -42,8 +43,8 @@ class App extends Component {
       <MuiThemeProvider theme={theme}>
         <Provider store={store}>
           <div className="App">
-          <Router>
-             
+            <Router>
+              <Main />
             </Router>
           </div>
         </Provider>
