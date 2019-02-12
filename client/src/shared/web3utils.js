@@ -25,5 +25,5 @@ export const verifySignature = (data:any,rpcsig:string,verifyPublicKey:string) =
   let signature = ethUtils.fromRpcSig(rpcsig)
   let publicKey = ethUtils.ecrecover(msgHash,signature.v,signature.r,signature.s)
   // console.log("verifySignature",publicKey.toString('hex'),verifyPublicKey.toString("hex"),publicKey.equals(verifyPublicKey))
-  return publicKey.toString("hex")==verifyPublicKey
+  return publicKey.toString("hex")===verifyPublicKey
 }

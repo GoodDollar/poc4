@@ -2,10 +2,10 @@
 import './App.css'
 import React, { Component } from 'react'
 import { Main } from './containers/Main'
-import { Provider, connect } from 'react-redux'
+import { Provider } from 'react-redux'
 import configureStore from './store/configureStore'
 import { createMuiTheme } from '@material-ui/core/styles'
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { BrowserRouter as Router } from 'react-router-dom'
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider'
 
 /* exports */

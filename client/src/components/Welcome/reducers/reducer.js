@@ -1,6 +1,6 @@
+//@flow
 import {DATA_SUCCESS} from '../actions'
 import {DATA_FAILURE} from '../actions'
-import {DATA_REQUEST} from '../actions'
 
 const initialState = {
     user:[],

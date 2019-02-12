@@ -1,0 +1,5 @@
+-generic blockchain configuration
+-generic port configuration
+- define flow types
+-move all type checking of react to flow (flowify prop types) https://flow.org/en/docs/react/components/
+- figure "not covered by flow" warnings

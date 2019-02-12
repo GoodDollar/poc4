@@ -4,17 +4,14 @@
 import Web3 from 'web3'
 import bs58 from 'bs58'
 // $FlowFixMe
-import _ from 'lodash'
 import Utils from './Utils'
 import IPFS from 'ipfs-mini'
 import Shared from './Shared'
 // $FlowFixMe
-import blockstack from 'blockstack'
 import ethUtils from 'ethereumjs-util'
-import WebsocketProvider from 'web3-providers-ws'
+
 // $FlowFixMe
 import Web3PromieEvent from 'web3-core-promievent'
-import { promisifyTxHash } from './web3utils'
 import GENContract from './blockchain/build/contracts/DAOToken.json'
 import IdentityContract from './blockchain/build/contracts/Identity.json'
 import GenesisContract from './blockchain/build/contracts/GenesisProtocol.json'
@@ -23,12 +20,13 @@ const CONTRACTS_DISABLED = false
 export default class IDDao extends Shared {
 
   web3: Web3;
-  gasPrice: number
   pkey: string
   addr: string
-  walletOwnerPubKey: Buffer
+  gasPrice: number
   netword_id: number
-
+  walletOwnerPubKey: Buffer
+  walletOwnerAddress:Buffer
+  walletOwnerAccount:string
 
   constructor(pkey: string) {
     super()
@@ -87,14 +85,14 @@ export default class IDDao extends Shared {
     this.profileProcessed = this.profileProcessed.bind(this)
 
 
-    //if (Super.isClient) {
+    if (super.isClient) {
       this.identityStatus = this.getIdentityStatus(this.walletOwnerAddress).then(x=>{this.identityStatus=x; console.log("this.identityStatus", this.identityStatus)})
       this.proposals = {}
       this.proposalPromise = undefined
       this.allProposalsLoaded = false
       this.amountOfProposals = 0
       this.amountOfProcessedProposals = 0
-    //}
+    }
   }
 
 
@@ -246,7 +244,7 @@ export default class IDDao extends Shared {
 
     this.amountOfProcessedProposals++
     console.log(this.amountOfProcessedProposals)
-    if (this.amountOfProcessedProposals == this.amountOfProposals) {
+    if (this.amountOfProcessedProposals = this.amountOfProposals) {
       this.allProposalsLoaded = true
       console.log("all proposals loaded", this.proposals)
     }
@@ -296,7 +294,7 @@ export default class IDDao extends Shared {
     console.log("Adding Profile if has state On Vote", { profile }, this)
 
     // Checking profile state - only profiles of state 3 and up on GENESIS will be processed
-    if (profile.state == "1") // TODO: change "1" to static const members
+    if (profile.state === "1") // TODO: change "1" to static const members
     {
 
       let proposalStatusPromise = this.genesisContract.methods.state(profile.proposalId).call()
@@ -369,12 +367,12 @@ export default class IDDao extends Shared {
     if (CONTRACTS_DISABLED)
       return 'none'
     let profile = await this.identityContract.methods.profiles(addr).call()
-    if (profile.state == 3)
+    if (profile.state === 3)
       return 'approved'
     let proposalStatus = await this.genesisContract.methods.state(profile.proposalId).call()
-    if (proposalStatus == 3)
+    if (proposalStatus === 3)
       return 'pending vouch'
-    if (proposalStatus == 4)
+    if (proposalStatus === 4)
       return 'pending vote'
     return 'none'
   }

@@ -5,9 +5,6 @@ import IDDao from './IDDao'
 export class Daostack {
     iddao:IDDao
 
-  constructor() {
-  }
-
   init(addr,pkey){
     this.iddao = new IDDao(addr,pkey)
     return this.iddao

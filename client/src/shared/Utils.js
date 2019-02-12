@@ -1,10 +1,14 @@
 //@flow
-import _ from 'lodash'
 import Web3 from 'web3' // import web3 v1.0 constructor
 import Secrets from './../Secrets.json'
 
 export class Utils {
     web3:Object
+    version: {
+        major: string,
+        minor: string,
+        patch: string
+    }
 
   constructor() {
       this.init()
@@ -54,8 +58,8 @@ export class Utils {
     return this.web3
   }
 
-  parseVersionString(str){
-    if (typeof(str) != 'string') { return false; }
+  parseVersionString(str:string):version {
+    if (typeof(str) != 'string') { return undefined }
     var x = str.split('.');
     // parse from string or default to 0 if can't parse
     var maj = parseInt(x[0]) || 0;

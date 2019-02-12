@@ -1,8 +1,10 @@
+// @flow
 import { service } from '../services';
 
-export const DATA_REQUEST  = 'DATA_REQUEST '
+export const DATA_REQUEST  = 'DATA_REQUEST'
 export const DATA_SUCCESS = 'DATA_SUCCESS'
 export const DATA_FAILURE = 'DATA_FAILURE'
+
 
 
 export function requestData() {

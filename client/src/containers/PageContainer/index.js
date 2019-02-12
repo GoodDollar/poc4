@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router-dom'
 import { Welcome } from '../../components/Welcome'
-import { Route, Link, Redirect, Switch } from 'react-router-dom'
+import { Route} from 'react-router-dom'
 
 class PageContainer extends Component {
     constructor(props) {
