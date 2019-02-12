@@ -26,7 +26,7 @@ export default class IDDao extends Shared {
   netword_id: number
   walletOwnerPubKey: Buffer
   walletOwnerAddress:Buffer
-  walletOwnerAccount:string
+  walletOwnerAccount:{}
 
   constructor(pkey: string) {
     super()
