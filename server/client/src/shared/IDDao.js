@@ -19,8 +19,6 @@ import GENContract from './blockchain/build/contracts/DAOToken.json'
 import IdentityContract from './blockchain/build/contracts/Identity.json'
 import GenesisContract from './blockchain/build/contracts/GenesisProtocol.json'
 
-
-
 const CONTRACTS_DISABLED = false
 export default class IDDao extends Shared {
 
@@ -34,7 +32,7 @@ export default class IDDao extends Shared {
 
   constructor(pkey: string) {
     super()
-    
+
     if (super.isClient()) {
       console.log("%c Client mode", 'background: #222; color: #bada55')
     }else{
