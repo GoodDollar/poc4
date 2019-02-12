@@ -1,6 +1,5 @@
 # GoodIdentity
 
-To form node server:
 npm run start
 browse http://localhost:3000/
 
