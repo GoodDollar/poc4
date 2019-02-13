@@ -18,7 +18,6 @@
     "coverage:native": "node scripts/test.js --config \"./config/native.jest.config.js\" --coverage"
   },
   "proxy": "http://localhost:3001",
-
   "dependencies": {
     "react": "^16.6.x",
     "react-app-polyfill": "^0.1.3",
