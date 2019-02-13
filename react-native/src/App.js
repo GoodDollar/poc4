@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Platform,
-  TouchableHighlight,
-  Animated,
-  Easing,
-} from 'react-native';
+// @flow
 import logo from './logo.png';
+import { Provider } from 'react-redux'
+import { Main } from './containers/Main/index'
+import React, { Component } from 'react'
+import configureStore from './store/configureStore'
+import { BrowserRouter as Router } from 'react-router-dom'
+import { StyleSheet,Text, View, Platform, TouchableHighlight, Animated, Easing,} from 'react-native';
+
+
+const store = configureStore()
 
 class App extends Component {
   state = {
@@ -27,20 +27,13 @@ class App extends Component {
 
 
     return (
-      <View style={styles.container}>
-        
-        <Text style={styles.title}>Create React Native Web App</Text>
-        <Text>Open up src/App.js to start working on your app!</Text>
-        <Text>Changes you make will automatically reload.</Text>
-        {Platform.OS !== 'web' && <Text>Shake your phone to open the developer menu.</Text>}
-        <TouchableHighlight
-          onPress={this.onClick}
-          style={styles.button}
-          underlayColor={'#0A84D0'}
-        >
-          <Text style={styles.buttonText}>Rotate Logo</Text>
-        </TouchableHighlight>
-      </View>
+      <Provider store={store}>
+        <View style={styles.container}>
+          <Router>
+              <Main />
+            </Router>
+        </View>
+      </Provider>
     );
   }
 }

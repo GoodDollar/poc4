@@ -6,7 +6,7 @@ export class Daostack {
     iddao:IDDao
 
  constructor(){
-    init()
+    //init()
  }
 
   init(addr,pkey){
