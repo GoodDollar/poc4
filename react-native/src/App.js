@@ -9,7 +9,6 @@ import {
   Easing,
 } from 'react-native';
 import logo from './logo.png';
-import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider'
 
 class App extends Component {
   state = {
