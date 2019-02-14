@@ -11,6 +11,14 @@ import { BrowserRouter as Router } from 'react-router-dom'
 const store = configureStore()
 let blockstack = new Blockstack();
 
+let init = async ()=> {
+// 1. Try to login to blockstack.
+ let loginObject = await blockstack.getLoginStatusAndAction() 
+ console.log({loginObject})
+}
+
+init();
+
 class App extends Component {
   state = {
     users: []
