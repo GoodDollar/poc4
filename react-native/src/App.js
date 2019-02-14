@@ -1,14 +1,15 @@
 // @flow
-import logo from './logo.png';
 import { Provider } from 'react-redux'
-import { Main } from './containers/Main/index'
 import React, { Component } from 'react'
+import Blockstack from './shared/Blockstack'
+import { Main } from './containers/Main/index'
 import configureStore from './store/configureStore'
+import { StyleSheet, View, Platform} from 'react-native'
 import { BrowserRouter as Router } from 'react-router-dom'
-import { StyleSheet,Text, View, Platform, TouchableHighlight, Animated, Easing,} from 'react-native';
 
 
 const store = configureStore()
+let blockstack = new Blockstack();
 
 class App extends Component {
   state = {
