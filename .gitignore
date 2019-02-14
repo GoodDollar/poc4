@@ -2,12 +2,12 @@
 /client/*
 
 # dependencies
-/node_modules/
-/react-native/node_modules/
-/react-native/daostack/
-/react-native/Secrets.json
-/react-native/.pnp
-/react-native/.pnp.js
+node_modules/
+react-native/node_modules/
+react-native/daostack/
+react-native/Secrets.json
+react-native/.pnp
+react-native/.pnp.js
 
 # testing
 /coverage
