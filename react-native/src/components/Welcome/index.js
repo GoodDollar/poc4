@@ -6,7 +6,7 @@ import * as Actions from './actions'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router-dom'
-import { Button } from 'react-native-paper'
+import { Button } from 'react-native'
 
 
 class Welcome extends React.Component {
