@@ -1,9 +1,11 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-/client
+/client/*
+
 # dependencies
-/react-native/node_modules
-/react-nativedaostack/
-/react-nativeSecrets.json
+/node_modules/
+/react-native/node_modules/
+/react-native/daostack/
+/react-native/Secrets.json
 /react-native/.pnp
 /react-native/.pnp.js
 

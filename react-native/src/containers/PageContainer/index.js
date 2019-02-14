@@ -1,9 +1,11 @@
+import { View } from 'react-native'
 import { connect } from 'react-redux'
 import { Route} from 'react-router-dom'
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router-dom'
-import { StyleSheet,Text, View, Platform, TouchableHighlight, Animated, Easing,} from 'react-native'
+import { Welcome } from '../../components/Welcome'
+
 
 class PageContainer extends Component {
     constructor(props) {
@@ -19,7 +21,7 @@ class PageContainer extends Component {
     render() {
         return (
             <View>
-
+                <Route exact path="/register" component={Welcome} />
           </View>
         );
     }
