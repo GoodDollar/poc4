@@ -1,17 +1,15 @@
 // @flow
-import { Provider } from 'react-redux'
+import Store from './store/Store'
 import React, { Component } from 'react'
+import Main from './containers/Main/index'
 import Blockstack from './shared/Blockstack'
-import { Main } from './containers/Main/index'
-import configureStore from './store/configureStore'
-import { StyleSheet, View, Platform} from 'react-native'
+import { StyleSheet, View, Platform,} from 'react-native'
 import { BrowserRouter as Router } from 'react-router-dom'
 
 type Props = {
 };
 
 
-const store = configureStore()
 // let blockstack = new Blockstack();
 
 let init = async ()=> {
@@ -22,57 +20,20 @@ let init = async ()=> {
 
 init();
 
-class App extends Component<Props> {
+class App extends Component<{},{}> {
   
-  
-  componentDidMount() {
-    
-  } 
-
-
   render() {
-
-
     return (
-      <Provider store={store}>
-        <View style={styles.container}>
+        <Store.Container>
+          <View>
           <Router>
               <Main />
             </Router>
         </View>
-      </Provider>
+        </Store.Container>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  logo: {
-    width: 300,
-    height: 300,
-  },
-  title: {
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
-  button: {
-    borderRadius: 3,
-    padding: 20,
-    marginVertical: 10,
-    marginTop: 10,
-    backgroundColor: '#1B95E0',
-  },
-  buttonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
-});
 
 let hotWrapper = () => () => App;
 if (Platform.OS === 'web') {

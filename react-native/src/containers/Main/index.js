@@ -1,25 +1,31 @@
+
+// @flow
 import React from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import Store from '../../store/Store'
 import Daostack from '../../shared/Daostack'
-import { withRouter } from 'react-router-dom'
-import { PageContainer } from '../PageContainer/index'
+import PageContainer from '../PageContainer/index'
+import type { StoreProps } from '../../store/Store'
 import { containsValidProofStatement } from 'blockstack/lib/profiles';
 //import { ProgressBar, Colors } from 'react-native-paper';
 
-class Main extends React.Component {
+type State = {
+  proposalsLoaded:boolean,
+}
 
-  constructor(props) {
-    super(props);
+class Main extends React.Component<StoreProps,State> {
+  
+  intervalId:IntervalID
+  state = {
+    proposalsLoaded: false,
+  };
+  
+  constructor() {
+    super()
     console.log('Main loaded')
-    this.checkProposalsLoaded = this.checkProposalsLoaded.bind(this)
-      this.state = {
-        proposalsLoaded : false  
-      }
   }   
 
-  checkProposalsLoaded(){
-      this.setState({proposalsLoaded:true},window.clearTimeout(this.task)) // TEMP
+   checkProposalsLoaded:()=>void  =() => {
+      this.setState({proposalsLoaded:true},window.clearTimeout(this.intervalId)) // TEMP
       /*if (Daostack.iddao){
         console.log("Daostack.isAllProposalsLoaded?",Daostack.isAllProposalsLoaded())
         if (Daostack.isAllProposalsLoaded()){
@@ -30,11 +36,11 @@ class Main extends React.Component {
   }
 
   componentDidMount(){
-    this.task = setInterval(()=>this.checkProposalsLoaded(), 5000);
+    this.intervalId = setInterval(()=> this.checkProposalsLoaded(), 5000);
   }
 
   componentWillMount(){
-    clearTimeout(this.task)
+    clearInterval(this.intervalId)
   }
 
   render() {
@@ -51,13 +57,7 @@ class Main extends React.Component {
   }
 }
 
-Main.propTypes = {
-  isAllProposalsLoaded: PropTypes.bool,
-};
 
-function mapStateToProps(state) {
-  return {}
-}
+export default Store.withStore(Main)
 
-const connectedMain = connect(mapStateToProps)(withRouter(Main));
-export { connectedMain as Main };
+

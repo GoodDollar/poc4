@@ -2,6 +2,8 @@
 import React from 'react'
 import { View } from 'react-native'
 import { Button } from 'react-native'
+import Store from '../../store/Store'
+import type { StoreProps } from '../../store/Store'
 
 type Props = {
     registered: string,     
@@ -23,15 +25,21 @@ const onPressRegister = (event) => {
    alert('register')
 }
 
+
 class Welcome extends React.Component<Props> {
     static defaultProps = {
         registered: "false"
       };
 
+    constructor(){
+        super()
+        console.log("Welcome loaded")
+    }
+    
+
     render() {
+        
         const registered = this.props.registered
-        debugger;
-        console.log("hi")
 
         return (
             <View>

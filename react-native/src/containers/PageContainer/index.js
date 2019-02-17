@@ -1,19 +1,19 @@
 // @flow
 import { View } from 'react-native'
-import { connect } from 'react-redux'
+import Store from '../../store/Store'
 import { Route} from 'react-router-dom'
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
-import { Welcome } from '../../components/Welcome'
+import Welcome from '../../components/Welcome'
+import type { StoreProps } from '../../store/Store'
 
 
-class PageContainer extends Component {
-    constructor(props) {
-        super(props);
+
+class PageContainer extends Component<StoreProps> {
+    constructor() {
+        super();
         console.log('PageContainer loaded')
-
-        this.state = {
-        };
+      
     }
   
     componentDidMount(){
@@ -30,18 +30,6 @@ class PageContainer extends Component {
     }
 }
 
-function mapDispatchToProps(dispatch) {
-    return {
-        // actions: bindActionCreators(Actions, dispatch)
-    };
-}
 
-function mapStateToProps(state) {
-    return {};
-}
-
-
-const connectedPageContainer = connect(mapStateToProps, mapDispatchToProps)(withRouter(PageContainer));
-export { connectedPageContainer as PageContainer };
-
+export default Store.withStore(PageContainer)
 
