@@ -17,13 +17,15 @@ class Main extends React.Component {
   }   
 
   checkProposalsLoaded(){
-      if (Daostack.iddao){
+      this.setState({proposalsLoaded:true},window.clearTimeout(this.task)) // TEMP
+      debugger;
+      /*if (Daostack.iddao){
         console.log("Daostack.isAllProposalsLoaded?",Daostack.isAllProposalsLoaded())
         if (Daostack.isAllProposalsLoaded()){
           console.log("setting state.proposalsLoaded=true")
           this.setState({proposalsLoaded:true},window.clearTimeout(this.task))
         }
-      }
+      }*/
   }
 
   componentDidMount(){
@@ -36,7 +38,8 @@ class Main extends React.Component {
 
   render() {
     return (
-      this.state.proposalsLoaded && <PageContainer />
+      
+       this.state.proposalsLoaded && <PageContainer />
       /*
       (!this.state.proposalsLoaded &&   <ProgressBar progress={0.5} color={Colors.red800} />)
       ||

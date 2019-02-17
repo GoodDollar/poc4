@@ -21,6 +21,7 @@ class PageContainer extends Component {
     render() {
         return (
             <View>
+                <Route exact path="/" component={Welcome} />
                 <Route exact path="/register" component={Welcome} />
           </View>
         );

@@ -1,6 +1,5 @@
 //@flow
 import React from 'react'
-import PropTypes from 'prop-types'
 import { View } from 'react-native'
 import * as Actions from './actions'
 import { connect } from 'react-redux'
@@ -9,8 +8,25 @@ import { withRouter } from 'react-router-dom'
 import { Button } from 'react-native'
 
 
-class Welcome extends React.Component {
- 
+type Props = {
+    registered: string,     
+    onPressVote: (event: any) => void,
+    onPressRegister: (event: any) => void,
+};
+
+const onPressVote = (event)=> {
+    alert('vote')
+}
+
+const onPressRegister = (event) => {
+   alert('register')
+}
+
+class Welcome extends React.Component<Props> {
+    static defaultProps = {
+        registered: "false"
+      };
+
     render() {
         const registered = this.props.registered
 
@@ -25,11 +41,11 @@ class Welcome extends React.Component {
                 <Button>Vouch and earn</Button>
                 <br />
                 {(registered === "true") &&
-                    <Button >Vote</Button>
+                    <Button onPress={onPressVote}>Vote</Button>
                 }
 
                     {(registered === "false") &&
-                    <Button >Register</Button>
+                    <Button onPress={onPressRegister}>Register</Button>
                 }
 
             </View>
@@ -37,9 +53,6 @@ class Welcome extends React.Component {
     }
 }
 
-Welcome.propTypes = {
-    registered: PropTypes.string,
-};
 
 function mapStateToProps(state) {
     return {
