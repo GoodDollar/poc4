@@ -1,18 +1,19 @@
 //@flow
 import React from 'react'
 import { View } from 'react-native'
-import * as Actions from './actions'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import { withRouter } from 'react-router-dom'
 import { Button } from 'react-native'
-
 
 type Props = {
     registered: string,     
     onPressVote: (event: any) => void,
     onPressRegister: (event: any) => void,
+    onPressVouch:(event: any) => void,
 };
+
+
+const onPressVouch = (event)=> {
+    alert('vouch')
+}
 
 const onPressVote = (event)=> {
     alert('vote')
@@ -29,7 +30,8 @@ class Welcome extends React.Component<Props> {
 
     render() {
         const registered = this.props.registered
-
+        debugger;
+        console.log("hi")
 
         return (
             <View>
@@ -38,14 +40,14 @@ class Welcome extends React.Component<Props> {
                 <h1 variant="h6"  className="heroTitle">IDENTITY MADE FOR YOU</h1>
                 <img src="/hero-image.png" className="heroImage"  alt="" />
                 <br />
-                <Button>Vouch and earn</Button>
+                <Button onPress={onPressVouch} title="Vouch and earn">Vouch and earn</Button>
                 <br />
                 {(registered === "true") &&
-                    <Button onPress={onPressVote}>Vote</Button>
+                    <Button onPress={onPressVote} title="Vote">Vote</Button>
                 }
 
                     {(registered === "false") &&
-                    <Button onPress={onPressRegister}>Register</Button>
+                    <Button onPress={onPressRegister} title="Register">Register</Button>
                 }
 
             </View>
@@ -53,17 +55,4 @@ class Welcome extends React.Component<Props> {
     }
 }
 
-
-function mapStateToProps(state) {
-    return {
-    }
-}
-
-function mapDispatchToProps(dispatch) {
-    return {
-        actions: bindActionCreators(Actions, dispatch)
-    };
-}
-
-const connectedWelcome = connect(mapStateToProps, mapDispatchToProps)(withRouter(Welcome));
-export { connectedWelcome as Welcome};
+export default Welcome;

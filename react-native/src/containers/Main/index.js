@@ -4,12 +4,14 @@ import { connect } from 'react-redux'
 import Daostack from '../../shared/Daostack'
 import { withRouter } from 'react-router-dom'
 import { PageContainer } from '../PageContainer/index'
+import { containsValidProofStatement } from 'blockstack/lib/profiles';
 //import { ProgressBar, Colors } from 'react-native-paper';
 
 class Main extends React.Component {
 
   constructor(props) {
     super(props);
+    console.log('Main loaded')
     this.checkProposalsLoaded = this.checkProposalsLoaded.bind(this)
       this.state = {
         proposalsLoaded : false  
@@ -18,7 +20,6 @@ class Main extends React.Component {
 
   checkProposalsLoaded(){
       this.setState({proposalsLoaded:true},window.clearTimeout(this.task)) // TEMP
-      debugger;
       /*if (Daostack.iddao){
         console.log("Daostack.isAllProposalsLoaded?",Daostack.isAllProposalsLoaded())
         if (Daostack.isAllProposalsLoaded()){
@@ -38,8 +39,8 @@ class Main extends React.Component {
 
   render() {
     return (
-      
-       this.state.proposalsLoaded && <PageContainer />
+      <PageContainer />
+       /*this.state.proposalsLoaded && <PageContainer />*/
       /*
       (!this.state.proposalsLoaded &&   <ProgressBar progress={0.5} color={Colors.red800} />)
       ||

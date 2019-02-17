@@ -1,8 +1,8 @@
+// @flow
 import { View } from 'react-native'
 import { connect } from 'react-redux'
 import { Route} from 'react-router-dom'
 import React, { Component } from 'react'
-import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router-dom'
 import { Welcome } from '../../components/Welcome'
 
@@ -10,6 +10,8 @@ import { Welcome } from '../../components/Welcome'
 class PageContainer extends Component {
     constructor(props) {
         super(props);
+        console.log('PageContainer loaded')
+
         this.state = {
         };
     }

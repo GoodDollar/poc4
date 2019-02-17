@@ -7,6 +7,9 @@ import configureStore from './store/configureStore'
 import { StyleSheet, View, Platform} from 'react-native'
 import { BrowserRouter as Router } from 'react-router-dom'
 
+type Props = {
+};
+
 
 const store = configureStore()
 // let blockstack = new Blockstack();
@@ -19,7 +22,8 @@ let init = async ()=> {
 
 init();
 
-class App extends Component {
+class App extends Component<Props> {
+  
   
   componentDidMount() {
     
