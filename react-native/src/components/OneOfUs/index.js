@@ -14,7 +14,7 @@ type Props = {
 
 
 const createId = async () => {
-    //await this.blockstackIns.writeIdentityDetails({}, 0.0001); // add proposal
+    //await this.blockstackIns.writeIdentityDetails({}, 0.0001); // add proposal //TODO:
 }
 
 const goToVoucher = () => {
@@ -42,3 +42,4 @@ class OneOfUs extends React.Component<Props> {
   }
 
 export default OneOfUs;
+
