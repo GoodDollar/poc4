@@ -1,9 +1,9 @@
+import { Route} from 'react-router-dom'
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router-dom'
 import { Welcome } from '../../components/Welcome'
-import { Route} from 'react-router-dom'
+import { OneOfUs } from '../../components/Welcome'
 
 class PageContainer extends Component {
     constructor(props) {
@@ -20,6 +20,8 @@ class PageContainer extends Component {
         return (
             <div>
                 <Route exact path="/register" component={Welcome} />
+                <Route exact path="/oneOfUs" component={OneOfUs} />
+
           </div>
         );
     }
