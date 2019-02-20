@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 //import {Payment} from '../Payment'
-import Store from '../../store/Store'
+import Store from '../store/Store'
 import { View, Image, Button } from 'react-native'
 //import CandidatesSelector from '../shared/CandidatesSelector'
 
@@ -98,6 +98,8 @@ class Voucher extends React.Component<Props, State> {
         return(
             <View>
                 <p className="topHeader">Vouch if profile is real and earn GEN</p>
+                <Button title='Vouch' onPress={()=>this.Vouch()}>Vouch</Button>
+                <br />
                 <Button title='Fake' onPress={()=>this.Fake()}>Fake</Button>
             </View>
         )

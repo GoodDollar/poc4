@@ -1,13 +1,12 @@
 // @flow
+import Store from '../store/Store'
 import { View } from 'react-native'
-import Store from '../../store/Store'
-import { Route} from 'react-router-dom'
+import {Route} from 'react-router-dom'
 import React, { Component } from 'react'
-import { withRouter } from 'react-router-dom'
-import Welcome from '../../components/Welcome'
-import OneOfUs from '../../components/OneOfUs'
-import Voucher from '../../components/Voucher'
-import type { StoreProps } from '../../store/Store'
+import Voucher from '../components/Vouch'
+import Welcome from '../components/Welcome'
+import OneOfUs from '../components/OneOfUs'
+import type { StoreProps } from '../store/Store'
 
 
 

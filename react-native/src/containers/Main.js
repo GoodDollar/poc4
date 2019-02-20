@@ -1,9 +1,9 @@
 
 // @flow
 import React from 'react'
-import Store from '../../store/Store'
-import Daostack from '../../shared/Daostack'
-import PageContainer from '../PageContainer/index'
+import Store from '../store/Store'
+import Daostack from '../shared/Daostack'
+import PageContainer from './PageContainer'
 import type { StoreProps } from '../../store/Store'
 import { containsValidProofStatement } from 'blockstack/lib/profiles';
 //import { ProgressBar, Colors } from 'react-native-paper';

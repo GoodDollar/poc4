@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
 import { Button } from 'react-native'
-import Store from '../../store/Store'
-import Blockstack from '../../shared/Blockstack'
+import Store from '../store/Store'
+import Blockstack from '../shared/Blockstack'
 import type { StoreProps } from '../../store/Store'
 import { View, Image, StyleSheet } from 'react-native'
 

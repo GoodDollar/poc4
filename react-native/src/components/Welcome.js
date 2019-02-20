@@ -2,7 +2,7 @@
 import React from 'react'
 import { View } from 'react-native'
 import { Button } from 'react-native'
-import Store from '../../store/Store'
+import Store from '../store/Store'
 import type { StoreProps } from '../../store/Store'
 
 type Props = {
