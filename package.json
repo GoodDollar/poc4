@@ -1,6 +1,9 @@
 {
   "name": "poc4",
   "private": true,
+  "engines": {
+    "node": "8.15.0"
+  },
   "scripts": {
     "start": "meteor run",
     "start:dev": "meteor run --settings settings-dev.json",
