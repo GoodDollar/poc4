@@ -8,8 +8,6 @@ import { View, Image, StyleSheet } from 'react-native'
 
 type Props = {
     //history: string,     
-    goToVoucher: () => void,
-    createId: () => void,
 };
 
 

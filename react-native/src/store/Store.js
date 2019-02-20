@@ -4,13 +4,14 @@ import type { Effects, Store } from 'undux'
 import { createConnectedStore } from 'undux'
 
 type State = {|
-  foo: number,
-  bar: string[]
+  registered: boolean,
+  proposalsLoaded:boolean,
 |}
 
 let initialState: State = {
-  foo: 12,
-  bar: []
+  registered: false,
+  proposalsLoaded: false
+  
 }
 
 export default createConnectedStore(initialState)

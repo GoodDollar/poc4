@@ -6,6 +6,7 @@ import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import Welcome from '../../components/Welcome'
 import OneOfUs from '../../components/OneOfUs'
+import Voucher from '../../components/Voucher'
 import type { StoreProps } from '../../store/Store'
 
 
@@ -27,6 +28,8 @@ class PageContainer extends Component<StoreProps> {
                 <Route exact path="/" component={Welcome} />
                 <Route exact path="/register" component={Welcome} />
                 <Route exact path="/oneOfUs" component={OneOfUs} />
+                <Route exact path="/voucher" component={Voucher} />
+
 
           </View>
         );
