@@ -1,9 +1,11 @@
 // @flow
+import _ from 'lodash'
 import React from 'react';
-//import {Payment} from '../Payment'
+import {Mock} from './../test/Mock'
 import Store from '../store/Store'
+//import {Payment} from '../Payment'
 import { View, Image, Button } from 'react-native'
-//import CandidatesSelector from '../shared/CandidatesSelector'
+import CandidateSelector from './CandidateSelector'
 
 type State = {
     proposalsLoaded:boolean,
@@ -29,37 +31,31 @@ class Voucher extends React.Component<Props, State> {
         console.log('Vouch Screen loaded')
     }
 
-    componentDidMount() {
-        this.getCandidatesData();
-    }
-
-    getCandidatesData = async () => {
-        //return ({})
-        /*let proposals = await Daostack.getProposals()
-        return proposals.map((proposal,idx) => {
-          let photo = _.get(proposal,"profile.image[0].contentUrl","https://scontent.fhfa1-2.fna.fbcdn.net/v/t1.0-1/45418652_2141102242636679_111588077893320704_n.jpg?_nc_cat=107&_nc_ht=scontent.fhfa1-2.fna&oh=e66ce7906c5bacc8947662a8f1c35be5&oe=5C415570")
-          let firstname = _.get(proposal," .name","John Doe")
-          // console.log({firstName})
-          return {
-              id:idx,
-              proposalId:proposal.proposalId,
-              photo,
-              firstname,
-              lastname:"",
-              ethOffering:0.5334,
-              socialMedia:{
-                  facebook:"https://www.facebook.com/gerihalliwell/",
-                  twitter:"https://twitter.com/GeriHalliwell?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor",
-                  linkedin:"https://www.linkedin.com/pulse/gerri-halliwell-bricks-leadership-lis-allen",
-                  instagram:"https://www.instagram.com/therealgerihalliwell/?hl=en",
-                  github:"https://github.com/edx/ease/blob/master/ease/tests/data/polarity/neg/cv051_10751.txt"
+    getCandidatesData = (proposals) => {
+        //let proposals = await Daostack.getProposals()
+        let allProposals = proposals.map((proposal,idx) => {
+            let photo = _.get(proposal,"profile.image[0].contentUrl","https://scontent.fhfa1-2.fna.fbcdn.net/v/t1.0-1/45418652_2141102242636679_111588077893320704_n.jpg?_nc_cat=107&_nc_ht=scontent.fhfa1-2.fna&oh=e66ce7906c5bacc8947662a8f1c35be5&oe=5C415570")
+            let firstname = _.get(proposal," .name","John Doe")
+            // console.log({firstName})
+            return {
+                id:idx,
+                proposalId:proposal.proposalId,
+                photo,
+                firstname,
+                lastname:"",
+                ethOffering:0.5334,
+                socialMedia:proposal.socialMedia,
+                username:proposal.username
               }
-     
-     
-            }
-        })*/
-        
+          })
+          debugger;
+        return allProposals
      }
+
+    componentDidMount() {
+        let mock = new Mock()
+        mock.mockProposals().then(proposals => this.getCandidatesData(proposals))
+    }
 
     Vouche = () => {
         this.setState((state, props) => ({
@@ -101,6 +97,7 @@ class Voucher extends React.Component<Props, State> {
                 <Button title='Vouch' onPress={()=>this.Vouch()}>Vouch</Button>
                 <br />
                 <Button title='Fake' onPress={()=>this.Fake()}>Fake</Button>
+                <CandidateSelector isOpen={true} candidates={candidatesList} slideHandler={this.updateSelectedCandidate} isVoter={false} />
             </View>
         )
         /*
