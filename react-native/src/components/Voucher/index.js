@@ -18,8 +18,14 @@ type Props = {
 
 class Voucher extends React.Component<Props, State> {
 
-    constructor() {
-        super();
+    state = {
+        candidates: [],
+        selectedCandidate:{},
+
+      };
+
+    constructor(props:Props) {
+        super(props);
         console.log('Vouch Screen loaded')
     }
 
@@ -85,14 +91,14 @@ class Voucher extends React.Component<Props, State> {
 
 
     render() {
-        console.log("this.state.showPayment="+this.props.store.get('showPayment'))
+        console.log("this.state.showPayment="+this.props.showPayment)
         const candidatesList = this.state.candidates
         const candidate = this.state.selectedCandidate || this.props.candidates[0];
 
         return(
             <View>
                 <p className="topHeader">Vouch if profile is real and earn GEN</p>
-                <Button onPress={()=>this.Fake()}>Fake</Button>
+                <Button title='Fake' onPress={()=>this.Fake()}>Fake</Button>
             </View>
         )
         /*

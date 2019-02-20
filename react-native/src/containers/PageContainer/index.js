@@ -28,7 +28,7 @@ class PageContainer extends Component<StoreProps> {
                 <Route exact path="/" component={Welcome} />
                 <Route exact path="/register" component={Welcome} />
                 <Route exact path="/oneOfUs" component={OneOfUs} />
-                <Route exact path="/voucher" component={Voucher} />
+                <Route exact path="/vouch" component={Voucher} />
 
 
           </View>

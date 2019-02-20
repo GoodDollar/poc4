@@ -2,8 +2,8 @@
 import Store from './store/Store'
 import React, { Component } from 'react'
 import Main from './containers/Main/index'
-import Blockstack from './shared/Blockstack'
-import { StyleSheet, View, Platform,} from 'react-native'
+// import Blockstack from './shared/Blockstack'
+import { View, Platform,} from 'react-native'
 import { BrowserRouter as Router } from 'react-router-dom'
 
 type Props = {
