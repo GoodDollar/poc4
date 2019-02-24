@@ -31,7 +31,8 @@ class Voucher extends React.Component<Props, State> {
         console.log('Vouch Screen loaded')
     }
 
-    getCandidatesData = (proposals) => {
+    loadCandidatesData = (proposals) => {
+        
         //let proposals = await Daostack.getProposals()
         let allProposals = proposals.map((proposal,idx) => {
             let photo = _.get(proposal,"profile.image[0].contentUrl","https://scontent.fhfa1-2.fna.fbcdn.net/v/t1.0-1/45418652_2141102242636679_111588077893320704_n.jpg?_nc_cat=107&_nc_ht=scontent.fhfa1-2.fna&oh=e66ce7906c5bacc8947662a8f1c35be5&oe=5C415570")
@@ -48,18 +49,21 @@ class Voucher extends React.Component<Props, State> {
                 username:proposal.username
               }
           })
-          debugger;
+          
+          this.setState((state, props) => ({
+            candidatesList: allProposals
+        }));
         return allProposals
      }
 
     componentDidMount() {
         let mock = new Mock()
-        mock.mockProposals().then(proposals => this.getCandidatesData(proposals))
+        mock.mockProposals().then(proposals => this.loadCandidatesData(proposals))
     }
 
     Vouche = () => {
         this.setState((state, props) => ({
-            showPayment: 'Vouche'
+            showPayment: 'Vouch'
         }));
     }
 

@@ -1,5 +1,5 @@
 //@flow
-class Shared {
+class SharedUtils {
 
     isClient():boolean{
         return(typeof window !== 'undefined' && ({}).toString.call(window) === '[object Window]')
@@ -10,4 +10,4 @@ class Shared {
     }   
 }
 
-export default Shared
+export default SharedUtils

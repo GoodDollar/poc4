@@ -1,6 +1,6 @@
 //@flow
 import Web3 from 'web3' // import web3 v1.0 constructor
-import Secrets from './../Secrets.json'
+import Secrets from './Secrets.json'
 
 export class Utils {
     web3:Object
